@@ -1,0 +1,626 @@
+﻿@using System.Data
+@using System.Collections
+@using FIXED_ASSET.DTO
+@using System.Data
+@using System.Collections
+
+@{
+    ViewBag.Title = "PRODUCT CATEGORY";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<ViewAssetCategoryDTO> AsssetCategoryGridList = new List<ViewAssetCategoryDTO>();
+
+
+    if (ViewBag.AsssetCategoryGridList != null)
+    {
+        AsssetCategoryGridList = ViewBag.AsssetCategoryGridList;
+    }
+}
+
+
+<script src="~/Scripts/sweetalert.js"></script>
+<link href="~/Content/css/sweetalert2.css" />
+<link href="~/Content/css/sweetalert2.min.css" />
+
+<link href="~/Content/css/select2.css" rel="stylesheet" />
+<script src="~/Content/js/select2.full.min.js"></script>
+<link href="~/Content/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+<script src="~/Content/js/dataTables.bootstrap.min.js"></script>
+
+<style type="text/css">
+
+    div.addnew {
+        display: none
+    }
+
+    html {
+        overflow-y: scroll;
+    }
+
+    .swal2-popup {
+        font-size: 1.5rem !important;
+    }
+</style>
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        LIST OF @ViewBag.Title
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <!-- Default box -->
+    <div class="center-block col-md-6" style="float: none;">    </div>
+    <div class="box box-primary addnew">
+        <div class="box-header with-border">
+
+            <div class="box-tools pull-right">
+                <button class="btn btn-primary bg-blue-gradient hide-form">Hide</button>
+            </div>
+        </div>
+
+        <form role="form"></form>
+        <div class="box-body">
+            <div class="panel panel-primary col-md-6 center-block" style="float: none;">
+                <div class="panel-body">
+                    <fieldset>
+                        <legend>CATEGORY</legend>
+                        <div class="form-group">
+                            <label for="ProductList">PRODUCT*</label>
+                            <select type="text" class="form-control select2 " style="width:470px;" id="ProductList"></select>
+                        </div>
+                        <div class="form-group hidden">
+                            <label for="Category">Category ID*</label>
+                            <input type="text" class="form-control" id="categoryId" placeholder="Category ID">
+                        </div>
+                        <div class="form-group">
+                            <label for="Category">CATEGORY*</label>
+                            <input type="text" class="form-control" id="categoryName" placeholder="Category Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="Designation">SHORT NAME*</label>
+                            <input type="text" class="form-control" id="categoryShortName" placeholder="Category Short Name">
+                        </div>
+
+                        @*<div class="form-group">
+                                <label for="Depriciation">Depriciation Rate</label>
+                                <input type="text" class="form-control" id="depriciationRate" placeholder="Depriciation Rate">
+                            </div>*@
+
+
+                        <div class="form-group">
+                            <label for="">STATUS*</label>
+                            <select id="active_status" class="form-control" name="active_status">
+                                <option value="true">Active</option>
+                                <option value="false">InActive</option>
+                            </select>
+                        </div>
+                        <div class="text-right">
+                            <button type="submit" class="btn btn-primary" id="submitCategory">Submit</button>
+                            <button class="btn btn-sm btn-primary " id="updateCategory" onclick ="updateCategory()">
+                                <i class="ace-icon fa fa-check"></i> Update
+                            </button>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- /.box -->
+    <!-- Default box -->
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <br />
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool show-form text-info bg-blue-gradient"><i class="fa fa-plus"></i>Add New</button>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="box-body table-responsive no-padding">
+                <table id="datatable" class="table table-bordered table-striped compact hover" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            @*<th>SL</th>*@
+                            <th class="hidden"></th>
+                            <th>PRODUCT</th>
+                            <th class="hidden">Category Id</th>
+                            <th>CATEGORY</th>
+                            <th> SHORT NAME</th>
+                            <th>STATUS</th>
+                            <th>ACTION</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <div class="box-footer">
+        </div>
+        <!-- /.box-footer-->
+    </div>
+    <!-- /.box -->
+
+</section>
+<!-- /.content -->
+<script>
+
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 1500,
+
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    });
+    $(document).ready(function () {
+
+        $('.select2').select2();
+
+
+        ProductList();
+
+        $('.addnew').hide();
+        $('.show-form').click(function () {
+            $('.addnew').show();
+            $('.show-form').hide();
+            $('#updateCategory').hide();
+        });
+        $('.hide-form').click(function () {
+            $('.addnew').hide();
+            $('.show-form').show();
+        });
+
+
+
+        $('#address-tab').attr('class', 'disabled');
+
+        $('#address-tab').click(function (event) {
+            if ($(this).hasClass('disabled')) {
+                return false;
+            }
+
+        });
+        getData();
+
+    });
+    $.trim($("#categoryCode").val()).length
+    //$("#categoryCode").change(function () {
+
+    //    var _shortcode = $("#categoryCode").val().toUpperCase();
+    //    $("#categoryCode").val(_shortcode);
+    //    if ($.trim(_shortcode).length < 1 || $.trim(_shortcode).length > 3) {
+
+    //        Toast.fire({
+    //            icon: 'warning',
+    //            title: 'Short Code length must be between 1 to 3'
+    //        });
+    //        $("#classificationCode").val('');
+    //    } else {
+    //        $.ajax({
+    //            type: "POST",
+    //            url: '/AssetCategory/CheckShortCode',
+    //            contentType: "application/json; charset=utf-8",
+    //            dataType: "json",
+
+    //            success: function (response) {
+    //                if (response != "ERROR") {
+
+
+    //                    Toast.fire({
+    //                        icon: 'error',
+    //                        title: 'Short Code Already exists for ' + response[0].CLASS_NAME
+    //                    });
+
+
+
+
+    //                    $("#categoryCode").val('');
+
+    //                } else {
+
+
+
+    //                    Toast.fire({
+    //                        icon: 'success',
+    //                        title: 'Short Code is Available'
+    //                    });
+    //                }
+
+    //            },
+    //            data: JSON.stringify({
+    //                shorcode: _shortcode,
+    //                st: 2
+
+    //            }),
+    //            error: function () {
+    //                Toast.fire({
+    //                    icon: 'error',
+    //                    title: 'Something went wrong'
+    //                });
+    //            }
+    //        });
+    //    }
+
+    //});
+
+
+
+
+    function ProductList() {
+        $.ajax({
+            url: '/Product/ProductList',
+            type: 'POST',
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                debugger;
+                if (response.length > 0) {
+                    console.log(response);
+                    $('select#ProductList').html('');
+                    var result = '';
+
+                    debugger;
+
+                    result += "<option value='0'>Product Name</option>";
+                    for (var i = 0; response.length > i; i++) {
+
+                        result += "<option id='" + response[i].PTYP_ID + 
+                            "' title='" + response[i].DESCRIPTION + "' value='" + response[i].PTYP_ID + "'>" + response[i].DESCRIPTION + "</option>";
+
+                    }
+                }
+                $('select#ProductList').append(result);
+
+
+            }
+        });
+    }
+
+
+    function getData() {
+
+        $('#datatable').DataTable({
+            "searching": true,
+            "paging": true,
+            "ordering": true,
+            "info": true,
+            "language":
+            {
+                "processing": "<div class='overlay custom-loader-background'><i class='fa fa-cog fa-spin custom-loader-color'></i></div>"
+            },
+            "processing": true,
+            "ajax": {
+                "url": "/Product/GetProductCategoryList",
+                "type": "GET",
+                "datatype": "json"
+            },
+            "columns": [
+                { "data": "DESCRIPTION", "autoWidth": true },
+                //{ "data": "EXTERNAL_ID", "autoWidth": true },
+                { "data": "CAT_NAME", "autoWidth": true },
+                { "data": "CAT_SHNAM", "autoWidth": true },
+                { "data": "STATUS", "autoWidth": true },
+                {
+                    "data": "PRD_CAT", "width": "50px", "render": function (data) {
+                        return '<button type="button" class="btn btn-primary" onclick="editCategory(' + data + ')">Edit</button>';
+
+                    }
+                }
+            ]
+        });
+
+    }
+
+    $("#submitCategory").click(function () {
+
+        //if ($("#categoryName").val() == "" || $("#categoryCode").val() == "") {
+
+        //    Toast.fire({
+        //        icon: 'error',
+        //        title: 'Please Enter Required Data'
+        //    });
+
+        //    return false;
+        //}
+        //if ($.trim($("#categoryCode").val()).length < 1 || $.trim($("#categoryCode").val()).length > 3) {
+
+        //    Toast.fire({
+        //        icon: 'error',
+        //        title: 'Category Short Code should be 1 to 3 digit'
+        //    });
+
+        //    return false;
+        //}
+        debugger;
+
+
+
+
+        var categoryId = 0;//$('#categoryId ').val();
+        var categoryName = $('#categoryName').val().toUpperCase();
+        var categoryShortName = $('#categoryShortName ').val().toUpperCase();
+        //var ProductList = $('#ProductList').val();
+        var productlist = $('#ProductList').val();
+
+        var activeStatus = $('#active_status').val();
+
+        if (categoryName == '') {
+            Toast.fire({
+                icon: 'error',
+                title: 'Category Name is empty'
+            });
+            return false;
+        }
+        else {
+            $.ajax({
+
+                type: "POST",
+                url: '/Product/SaveCategory',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response != null) {
+
+
+                        Toast.fire({
+                            icon: 'success',
+                            title: response
+                        });
+
+
+                        $("#categoryName").val("");
+                        $("#ProductList").val("");
+                        $('.addnew').show();
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1500);
+                    }
+                },
+                data: JSON.stringify({
+                    categoryId: categoryId,
+                    categoryName: categoryName,
+                    categoryShortName: categoryShortName,
+                    ProductList: productlist,
+                    activeStatus: activeStatus
+
+                }),
+                error: function () {
+                    alert("error");
+
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'error'
+                    });
+
+                }
+            });
+        }
+
+    });
+
+
+ //   function editAssetCategory(catId) {
+ //       //  $("#categoryId").prop("disabled", true);
+ ///*       $("#ProductList").prop("disabled", true);*/
+ //      /* $("#categoryCode").prop("disabled", true);*/
+ //       $('.addnew').show();
+ //       $('#updateCategory').show();
+ //       $('#submitCategory').hide();
+
+ //       $.ajax({
+ //           type: "POST",
+ //           url: "/AssetCategory/Edit_it",
+ //           contentType: "application/json; charset=utf-8",
+ //           dataType: "json",
+ //           data: JSON.stringify({
+
+ //               catId: catId
+
+ //           }),
+ //           success: function (response) {
+ //               console.log(response);
+
+ //               $("#categoryId").val(catId);
+ //               $("#categoryName").val(response.data.DESCRIPTION);
+ //               $("#categoryCode").val(response.data.CODE);
+ //               $("#ProductList").html('');
+ //               var result = '';
+ //               result += "<option value='" + response.data.PTYPE_ID + "'>" + response.data.DESCRIPTION + "</option>";
+ //               $("#ProductList").append(result);
+
+ //               if (response.data.STATUS == 'Active') {
+ //                   $("#active_status").val('true');
+ //               } else {
+ //                   $("#active_status").val('false');
+ //               }
+ //               $("#btnShowReport").hide();
+ //               $("#btnUpdate").show();
+
+
+ //           }
+ //       })
+
+
+  /*  }*/
+    function editCategory(catID) {
+         /* $("#categoryId").prop("disabled", true);*/
+        /*       $("#ProductList").prop("disabled", true);*/
+        /* $("#categoryCode").prop("disabled", true);*/
+        $('.addnew').show();
+        $('#updateCategory').show();
+        $('#submitCategory').hide();
+
+        $.ajax({
+            type: "POST",
+            url: "/Product/EditCategory",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify({
+
+                catID: catID
+
+            }),
+            success: function (response) {
+                console.log(response);
+
+                $("#categoryId").val(catID);
+                $("#categoryName").val(response.data.CAT_NAME);
+                $("#categoryShortName").val(response.data.CAT_SHNAM);
+                $("#ProductList").html('');
+                var result = '';
+                result += "<option value='" + response.data.PTYPE_ID+ "'>" + response.data.DESCRIPTION + "</option>";
+                $("#ProductList").append(result);
+
+                if (response.data.STATUS == 'Active') {
+                    $("#active_status").val('true');
+                } else {
+                    $("#active_status").val('false');
+                }
+                //$("#btnShowReport").hide();
+                //$("#btnUpdate").show();
+
+
+            }
+        });
+
+
+    }
+
+
+    //$("#updateCategory").click(function UpdateData() {
+
+    //    var categoryId = $('#categoryId ').val();
+    //    var categoryName = $('#categoryName').val().toUpperCase();
+    //    var categoryCode = $('#categoryCode ').val();
+    //    var ProductList = $('#ProductList ').val();
+    //    var activeStatus = $('#active_status').val();
+
+
+    //    if (categoryName == '') {
+    //        Toast.fire({
+    //            icon: 'error',
+    //            title: 'Category Name  field is empty'
+    //        });
+    //        return false;
+    //    }
+    //    else if (ProductList == '') {
+    //        Toast.fire({
+    //            icon: 'error',
+    //            title: 'ProductList  field is empty'
+    //        });
+    //        return false;
+    //    }
+    //    else {
+    //        $.ajax({
+    //            url: '/AssetCategory/updateAssetCategory',
+    //            type: 'POST',
+    //            dataType: "json",
+    //            traditional: true,
+    //            success: function (response) {
+    //                if (response != null) {
+    //                    Toast.fire({
+    //                        icon: 'success',
+    //                        title: response
+    //                    });
+    //                    $("#categoryId").val("");
+    //                    $("#categoryName").val("");
+    //                    $("#ProductList").val("");
+    //                    // $("#active_status").val(-1);
+    //                    $('.addnew').show();
+    //                    setTimeout(function () {
+    //                        location.reload();
+    //                    }, 1500);
+
+    //                }
+
+    //            },
+    //            data: {
+
+    //                categoryId: categoryId,
+    //                categoryName: categoryName,
+    //                categoryCode: categoryCode,
+    //                ProductList: ProductList,
+    //                activeStatus: activeStatus
+    //            },
+    //            error: function () {
+    //                Toast.fire({
+    //                    icon: 'error',
+    //                    title: 'Something went wrong'
+    //                });
+    //            }
+    //        });
+    //    }
+
+    //});
+
+    function updateCategory()  {
+
+        var categoryId = $('#categoryId ').val();
+        var categoryName = $('#categoryName').val().toUpperCase();
+        var categoryShortName = $('#categoryShortName ').val();
+        var ProductList = $('#ProductList ').val();
+        var activeStatus = $('#active_status').val();
+
+
+            $.ajax({
+                url: '/Product/updateCategory',
+                contentType: "application/json;charset=utf-8",
+                type: 'POST',
+                data: JSON.stringify(
+
+                      {
+                        categoryId: categoryId,
+                        categoryName: categoryName,
+                        categoryShortName: categoryShortName,
+                        ProductList: ProductList,
+                        activeStatus: activeStatus
+
+                       }
+                ),
+             
+                dataType: "json",
+                /*traditional: true,*/
+                success: function (response) {
+                    if (response != null) {
+                        Toast.fire({
+                            icon: 'success',
+                            title: response
+                        });
+                        
+                        $('.addnew').show();
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1500);
+
+                    }
+
+                },
+                //data: {
+
+                //    categoryId: categoryId,
+                //    categoryName: categoryName,
+                //    categoryShortName: categoryShortName,
+                //    ProductList: ProductList,
+                //    activeStatus: activeStatus
+                //},
+                error: function () {
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Something went wrong'
+                    });
+                }
+            });
+        
+
+    }
+</script>

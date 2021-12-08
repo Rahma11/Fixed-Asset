@@ -1,0 +1,499 @@
+﻿@using System.Data
+@using System.Collections
+@using FIXED_ASSET.DTO
+@using System.Data
+@using System.Collections
+
+@{
+    ViewBag.Title = "Depreciation";
+}
+
+<script src="~/Scripts/sweetalert.js"></script>
+<link href="~/Content/css/sweetalert2.css" />
+<link href="~/Content/css/sweetalert2.min.css" />
+
+<link href="~/Content/css/select2.css" rel="stylesheet" />
+<script src="~/Content/js/select2.full.min.js"></script>
+<link href="~/Content/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+<script src="~/Content/js/dataTables.bootstrap.min.js"></script>
+
+<style type="text/css">
+
+    .swal2-popup {
+        font-size: 1.5rem !important;
+    }
+
+    div.addnew {
+        display: none
+    }
+
+    html {
+        overflow-y: scroll;
+    }
+</style>
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        @ViewBag.Title
+
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <!-- Default box -->
+    <div class="center-block col-md-6" style="float: none;">    </div>
+    <div class="box box-primary addnew">
+        <div class="box-header with-border">
+            <br />
+            <div class="box-tools pull-right">
+                <button class="btn btn-primary bg-blue-gradient hide-form">Hide</button>
+            </div>
+        </div>
+
+        <form role="form"></form>
+        <div class="box-body">
+            <div class="panel panel-primary col-md-6 center-block" style="float: none;">
+                <div class="panel-body">
+                    <fieldset>
+                        <legend>@ViewBag.Title</legend>
+                        <div class="form-group hidden">
+                            <label for="Method">DEP ID</label>
+                            <input type="text" class="form-control" id="DEPID" placeholder="DEP ID">
+                        </div>
+                        <div class="form-group ">
+                            <label for="Method"> Method</label>
+
+                            <select id="Method_Name" class="form-control" name="Method_Name">
+                                <option value="Straight Line Method">Straight Line Method</option>
+                                <option value="Declining Balance Method">Declining Balance Method</option>
+                                <option value="Units-of-production Depreciation Method">Units-of-production Depreciation Method</option>
+                                <option value="Sum-of-years-digits method">Sum-of-years-digits method</option>
+                                @*<option value="5">Units of time depreciation</option>
+                                    <option value="6">Composite depreciation method</option>*@
+                            </select>
+
+                        </div>
+                        @*<div class="form-group">
+                                <label for="Designation">Brand Name</label>
+                                <input type="text" class="form-control" id="BrandName" placeholder="Classification Code" autocomplete="off">
+                            </div>*@
+                        <div class="form-group">
+                            <label for="">Description</label>
+                            <input type="text" class="form-control" id="description" placeholder="Description">
+                        </div>
+                        <div class="form-group ">
+                            <label for="Calculation">Calculation Basic</label>
+
+                            <select id="calculation_basic" class="form-control" name="calculation_basic">
+                                <option value="Cost Value">Cost Value</option>
+                                <option value="Net Value">Net Value</option>
+
+
+                            </select>
+
+                        </div>
+                        <div class="form-group">
+                            <label for="">Basic Rate</label>
+                            <input type="number" class="form-control" id="basic_rate" placeholder="Basic Rate">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="">Adjusted Rate</label>
+                            <input type="number" class="form-control" id="adj_rate" placeholder="Adjusted Rate">
+                        </div>
+                        <div class="text-right">
+                            <button type="submit" class="btn btn-primary" id="submitMethod" @*onclick="addcat();"*@>Submit</button>
+                            <button class="btn btn-sm btn-primary " id="updateMethod">
+                                <i class="ace-icon fa fa-check"></i> Update
+                            </button>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- /.box -->
+    <!-- Default box -->
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <br />
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool show-form text-info bg-blue-gradient"><i class="fa fa-plus"></i>Add New</button>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="box-body table-responsive no-padding">
+                <table id="datatable" class="table table-bordered table-striped compact hover" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            @*<th>SL</th>*@
+                            <th class="hidden"></th>
+                            <th>METHOD</th>
+                            @*<th class="hidden">Category Id</th>
+                                <th>CATEGORY</th>
+                                <th> SHORT NAME</th>*@
+                            <th>DESCRIPTION</th>
+                            <th>CAL_BASIC</th>
+                            <th>BASIC_RATE</th>
+                            <th>ADJ_RATE</th>
+                            <th>EDIT</th>
+                            @*<th>DELETE</th>*@
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <div class="box-footer">
+        </div>
+        <!-- /.box-footer-->
+        <!-- /.box-footer-->
+    </div>
+    <!-- /.box -->
+
+</section>
+<!-- /.content -->
+<script>
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    });
+
+
+    $(document).ready(function () {
+        $('.select2').select2();
+
+
+        $('.addnew').hide();
+        $('.show-form').click(function () {
+            $('.addnew').show();
+            $('.show-form').hide();
+            $('#updateMethod').hide();
+        });
+        $('.hide-form').click(function () {
+            $('.addnew').hide();
+            $('.show-form').show();
+        });
+
+
+
+        $('#address-tab').attr('class', 'disabled');
+
+        $('#address-tab').click(function (event) {
+            if ($(this).hasClass('disabled')) {
+                return false;
+            }
+
+        });
+        getData();
+
+
+    });
+
+    //test
+
+
+    function getData() {
+        $('#datatable').DataTable({
+            "searching": true,
+            "paging": true,
+            "ordering": true,
+            "info": true,
+            "language":
+            {
+                "processing": "<div class='overlay custom-loader-background'><i class='fa fa-cog fa-spin custom-loader-color'></i></div>"
+            },
+            "processing": true,
+            "ajax": {
+                "url": "/Depreciation/GetMethodList",
+                "type": "GET",
+                "datatype": "json"
+            },
+            "columns": [
+                { "data": "METHOD", "autoWidth": true },
+                //{ "data": "CODE", "autoWidth": true },
+                { "data": "DESCRIPTION", "autoWidth": true },
+                { "data": "CAL_BASIC", "autoWidth": true },
+                { "data": "BASIC_RATE", "autoWidth": true },
+                { "data": "ADJ_RATE", "autoWidth": true },
+
+                {
+                    "data": "DEP_ID", "width": "50px", "render": function (data) {
+                        return '<button type="button" class="btn btn-primary" onclick="editMethod(' + data + ')">Edit</button>';
+                    }
+                },
+                 {
+                    "data": "DEP_ID", "width": "50px", "render": function (data) {
+                        return '<button type="button" class="btn btn-primary" onclick="deleteMethod(' + data + ')">Delete</button>';
+                    }
+                 },
+            ]
+        });
+
+    }
+
+    $("#submitMethod").click(function () {
+
+        var method = $('#Method_Name').val();
+
+        var calculation = $('#calculation_basic').val();
+        var description = $('#description').val();
+        var adjust = $('#adj_rate').val();
+        var basic = $('#basic_rate').val();
+
+        if (method == '') {
+            Toast.fire({
+                icon: 'error',
+                title: 'Method name field is empty'
+            });
+            return false;
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                url: '/Depreciation/SaveMethod',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify({
+                    Method_Name: method,
+                    calculation_basic: calculation,
+                    description: description,
+                    basic_rate: basic,
+                    adj_rate: adjust
+
+                }),
+
+                success: function (response) {
+                    if (response != null) {
+
+                        if (response === 'Success') {
+                            Toast.fire({
+                                icon: 'success',
+                                title: response
+                            });
+
+                            $("#Method_Name").val("");
+                            $("#description").val("");
+                            $("#calculation_basic").val("");
+                            $("#basic_rate").val("");
+                            $("#adj_rate").val("");
+                            $('.addnew').show();
+                            setTimeout(function () {
+                                location.reload();
+                            }, 1500);
+                        } else {
+                            Toast.fire({
+                                icon: 'error',
+                                title: response
+                            });
+                            $('.addnew').show();
+                        }
+                    }
+                },
+
+                error: function () {
+
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'error'
+                    });
+                }
+            });
+        }
+    });
+        //$.ajax({
+        //    type: "POST",
+        //    url: "/Depreciation/SaveMethod",
+        //    contentType: "application/json; charset=utf-8",
+        //    dataType: "json",
+
+        //    data: JSON.stringify(
+        //        {
+        //            Method_Name: method,
+        //            calculation_basic: calculation,
+        //            description: description,
+        //            basic_rate: basic,
+        //            adj_rate: adjust
+        //        }
+        //    ),
+        //    success: function (response) {
+        //        if (response != null) {
+        //            alert('OKa');
+        //        }
+        //        else {
+        //            alert('not otkay');
+        //        }
+
+        //    }
+        //})
+        //}
+
+    //});
+
+    function editMethod(DEPID) {
+        //$("#classificationId").prop("disabled", true);
+        $("#classificationCode").prop("disabled", true);
+    /*    $('.addnew').show();*/
+        $('#updateMethod').show();
+        $('#submitMethod').hide();
+
+        $.ajax({
+            type: "POST",
+            url: "/Depreciation/EditMethod",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify({
+                //  obj: asd
+                DEPID: DEPID
+
+            }),
+            success: function (response) {
+
+                console.log(response);
+
+                //var brandName = $('#brandName').val().toUpperCase();
+                //var activeStatus = $('#active_status').val();
+                $("#DEPID").val(DEPID);
+                $("#Method_Name").val(response.data.METHOD);
+                $("#description").val(response.data.DESCRIPTION);
+                $("#calculation_basic").val(response.data.CAL_BASIC);
+                $("#basic_rate").val(response.data.BASIC_RATE);
+                $("#adj_rate").val(response.data.ADJ_RATE);
+                //$("#classificationCode").val(response.data.CODE);
+
+                //if (response.data.STATUS == 'Active') {
+                //    $("#active_status").val('true');
+                //} else {
+                //    $("#active_status").val('false');
+                //}
+
+                //$("#btnShowReport").hide();
+                //$("#btnUpdate").show();
+
+
+            }
+        })
+
+
+    }
+
+    function deleteMethod(DEPID) {
+        //$("#classificationId").prop("disabled", true);
+        //$("#classificationCode").prop("disabled", true);
+        //$('.addnew').show();
+        //$('#updateOperationCost').show();
+        //$('#submitOperationCost').hide();
+
+        $.ajax({
+            type: "POST",
+            url: "/Depreciation/DeleteMethod",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify({
+                //  obj: asd
+                DEPID: DEPID
+
+            }),
+            success: function (response) {
+
+                console.log(response);
+
+                //var OperationCostName = $('#OperationCostName').val().toUpperCase();
+                //var activeStatus = $('#active_status').val();
+                //$("#OperationCostId").val(OperationCostId);
+                //$("#description").val(response.data.DESCRIPTION);
+                //$("#OperationCost").val(response.data.COST_PER_H);
+                //$("#classificationCode").val(response.data.CODE);
+
+                //if (response.data.STATUS == 'Active') {
+                //    $("#active_status").val('true');
+                //} else {
+                //    $("#active_status").val('false');
+                //}
+
+                //$("#btnShowReport").hide();
+                //$("#btnUpdate").show();
+                location.reload();
+
+            }
+        })
+
+
+    }
+    $("#updateMethod").click(function UpdateData() {
+        debugger
+        var DEPID = $("#DEPID").val();
+        //var brandName = $('#brandName ').val().toUpperCase();
+        //var activeStatus = $('#active_status').val();
+        var method = $('#Method_Name').val();
+
+        var calculation = $('#calculation_basic').val();
+        var description = $('#description').val();
+        var adjust = $('#adj_rate').val();
+        var basic = $('#basic_rate').val();
+
+
+        $.ajax({
+            url: '/Depreciation/UpdateMethod',
+            type: 'POST',
+            dataType: "json",
+            traditional: true,
+            success: function (response) {
+                if (response != null) {
+
+                    Toast.fire({
+                        icon: 'success',
+                        title: response
+                    });
+
+                   
+                    $('.addnew').show();
+                    setTimeout(function () {
+                        $('.show-form').hide();
+                        location.reload();
+                    }, 1500);
+
+                }
+            },
+            data: {
+
+                DEPID:DEPID,
+                Method_Name: method,
+                calculation_basic: calculation,
+                description: description,
+                basic_rate: basic,
+                adj_rate: adjust
+
+
+
+            },
+            error: function () {
+
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Something went wrong'
+                });
+
+            }
+        });
+        //}
+
+    });
+
+
+</script>

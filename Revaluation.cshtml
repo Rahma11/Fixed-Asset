@@ -1,0 +1,483 @@
+﻿
+@{
+    ViewBag.Title = "Revaluation";
+}
+
+
+<link href="~/Content/css/select2.css" rel="stylesheet" />
+<link href="~/Content/Custom/_Item.css" rel="stylesheet" />
+<script src="~/Content/js/select2.full.min.js"></script>
+<link href="~/Content/css/bootstrap3-wysihtml5.min.css" rel="stylesheet" />
+<link href="~/Content/css/bootstrap-select.css" rel="stylesheet" />
+<link href="~/dist/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+<script src="~/dist/js/bootstrap-datepicker.min.js"></script>
+<link rel="stylesheet" href="~/plugins/iCheck/all.css">
+<!-- iCheck 1.0.1 -->
+<script src="~/plugins/iCheck/icheck.min.js"></script>
+
+<script src="~/Content/js/bootstrap3-wysihtml5.all.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+<script src="~/Content/js/dataTables.bootstrap.min.js"></script>
+<script src="~/Scripts/sweetalert.js"></script>
+<link href="~/Content/css/sweetalert2.css" />
+<link href="~/Content/css/sweetalert2.min.css" />
+
+
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" />
+
+
+
+<section id="Asset">
+    <div class="form-horizontal">
+        <section class="content-header">
+            <h1 style="font-weight: bolder;">
+                @ViewBag.Title
+            </h1>
+
+
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="active">@ViewBag.Title</li>
+
+            </ol>
+        </section>
+        <section class="content">
+
+
+            <div id="myTabContent_" class="box box-primary wow fadeInLeft">
+
+                <div class="tab-pane fade active in" id="tab_1" color="blue">
+                    <div class="panel-body">
+                        <fieldset>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="ClassList">ASSET TYPE*</label>
+                                    <select type="text" class="form-control select2" id="ClassList"></select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="CategoryList">CATEGORY*</label>
+                                    <select type="text" class="form-control select2" id="CategoryList"></select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="SegmentList">SUB CATEGORY*</label>
+                                    <select type="text" class="form-control select2" id="SegmentList" data-placeholder="Sub Category"></select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="modelId">ASSET NAME*</label>
+                                    <select class="form-control select2" id="Assetlist"></select>
+                                </div>
+
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="ClassList">ASSET INITIAL-TAG*</label>
+                                    <select type="text" class="form-control select2" id="AssetTAG"></select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="quantity">REVALUEATION AMOUNT*</label>
+                                    <input type="text" class="form-control" id="ReAmount" placeholder="Quantity">
+
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="date">REVALUATION DATE</label>
+                                    <input type="text" class="form-control" id="date" style="font-size: 15px;">
+
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="quantity">NET VALUE*</label>
+                                    <input type="text" class="form-control" id="NetValue" placeholder="Quantity" disabled>
+
+                                </div>
+
+                            </div><br />
+
+                            <div class="row">
+                                @*<div class="col-md-3">
+                                        <label for="ClassList">COST</label>
+                                        <select type="text" class="form-control select2" id="uniqueAsset"></select>
+                                    </div>*@
+                                <div class="col-md-3">
+                                    <label for="quantity">BOOK VALUE*</label>
+                                    <input type="text" class="form-control" id="BookValue" placeholder="Quantity" disabled>
+
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="ClassList">ADJUSTED COST</label>
+                                    <input type="text" class="form-control " id="ADJ_COST">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="quantity">REVALUEATION RESERVE</label>
+                                    <input type="text" class="form-control" id="RE_RSV" placeholder="Quantity">
+
+                                </div>
+
+
+
+
+                            </div><br />
+
+                            <div class="row">
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary" id="submitRevaluation">Submit</button>
+                                </div>
+                            </div>
+
+
+
+                        </fieldset>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+
+
+
+
+
+        </section>
+
+
+    </div>
+</section>
+
+<script>
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 1500,
+
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    });
+    $(document).ready(function () {
+
+        $('.select2').select2();
+        ClassList();
+        // ManufactureList(0);
+        //SupplierList(0);
+        $.fn.datepicker.defaults.autoclose = true;
+        $("#date").datepicker("setDate", new Date());
+    });
+
+    $("#name").change(function () {   // 1st
+
+
+        $("#name").val($("#name").val().toUpperCase());
+        $("#description").val($("#name").val().toUpperCase());
+
+    });
+
+
+    //$("#SegmentList").change(function () {
+    //    var segmentId = $("#SegmentList :selected").val();
+    //    AssetList(segmentId);
+    //});
+
+    $("select#ClassList").change(function () {
+
+        CategoryList($('select#ClassList').val());
+
+    });
+    $("select#CategoryList").change(function () {
+
+        SegmentList($("select#CategoryList").val());
+
+    });
+    $("select#SegmentList").change(function () {
+
+        AssetList($("select#SegmentList").val());
+
+    });
+
+    $("select#Assetlist").change(function () {
+
+        AssetTAG($("select#Assetlist").val());
+
+    });
+
+
+
+
+
+
+
+
+
+
+    function ClassList() {
+
+        $.ajax({
+            url: '/AssetCategory/ClassList',
+            type: 'POST',
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.length > 0 && response != "ERROR") {
+                  /*  console.log(response);*/
+                    $('select#ClassList').html('');
+                    var result = '';
+                    result += "<option value='0'>Class Name</option>";
+                    for (var i = 0; response.length > i; i++) {
+
+                        result += "<option id='" + response[i].CLASS_ID + "'  data-STORAGE_ID='" + response[i].EXTERNAL_ID + "' title='" + response[i].DESCRIPTION + "' value='" + response[i].CLASS_ID + "' data-shortname='" + response[i].CODE + "'>" + response[i].DESCRIPTION + "</option>";
+
+                    }
+                }
+                $('select#ClassList').append(result);
+
+
+            }
+        });
+    }
+
+    function CategoryList(classId) {
+        $.ajax({
+            url: '/AssetCategory/CategoryList',
+            type: 'POST',
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({ _classId: classId }),
+            dataType: "json",
+            success: function (response) {
+                $('select#CategoryList').html('');
+                var result = '';
+                result += "<option value='0'>SELECT CATEGORY</option>";
+                if (response.length > 0 && response != "ERROR") {
+
+                    for (var i = 0; response.length > i; i++) {
+                        result += "<option id='" + response[i].CAT_ID + "' data-shortname='" + response[i].CODE + "' data-STORAGE_ID='" +
+                            response[i].EXTERNAL_ID + "' title='" + response[i].DESCRIPTION +
+                            "' value='" + response[i].CAT_ID + "' data-shortname='" + response[i].STATUS + "'>" + response[i].DESCRIPTION + "</option>";
+                    }
+                    $('select#CategoryList').append(result);
+                }
+            }
+        });
+    }
+
+    function SegmentList(catId) {
+        $.ajax({
+            url: '/AssetCategory/SegmentList',
+            type: 'POST',
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({ _catId: catId }),
+            dataType: "json",
+            success: function (response) {
+                $('select#SegmentList').html('');
+                var result = '';
+                result += "<option value='0'>Sub Category</option>";
+                if (response != "ERROR") {
+
+                    for (var i = 0; response.length > i; i++) {
+                        result += "<option  value='" + response[i].SEG_ID + "'data-shortname='" + response[i].CODE + "'>" + response[i].DESCRIPTION + "</option>";
+                    }
+                    $('select#SegmentList').append(result);
+
+                }
+            }
+        });
+    }
+    //function AssetList(segmentId, name) {
+    //    $.ajax({
+    //        url: '/AssetCategory/AssetList',
+    //        type: 'POST',
+    //        contentType: "application/json;charset=utf-8",
+    //        data: JSON.stringify({ _segmentId: segmentId, _name: name }),
+    //        dataType: "json",
+    //        success: function (response) {
+
+    //            if (response.length > 0) {
+    //                $('select#Assetlist').html('');
+
+
+    //                var result = '';
+
+    //                for (var i = response.length - 1; response.length > i; i++) {
+
+    //                    result += "<option id='" + response[i].ASSET_CODE + "' data-shortname='" + response[i].MST_TAG + "' value='" + response[i].ASSET_CODE + "'>" + response[i].NAME + "</option>";
+
+    //                }
+
+    //                $('select#Assetlist').append(result);
+
+    //            }
+    //        }
+    //    });
+    //}
+    function AssetList(segmentId) {
+        $.ajax({
+            url: '/AssetCategory/AssetList1',
+            type: 'POST',
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({ _segmentId: segmentId }),
+            dataType: "json",
+            success: function (response) {
+
+                if (response.length > 0 && response != "ERROR") {
+                    $('select#Assetlist').html('');
+
+
+                    var result = '';
+                    result += "<option value='0' selected>SELECT ASSET</option>";
+
+                    for (var i = 0; i < response.length; i++) {
+
+                        result += "<option id='" + response[i].ASSET_CODE + "' data-shortname='" + response[i].MST_TAG + "' value='" + response[i].ASSET_CODE + "'>" + response[i].NAME + "</option>";
+
+                    }
+
+                    $('select#Assetlist').append(result);
+
+                }
+            }
+        });
+    }
+
+    function AssetTAG(assetCode) {
+        $.ajax({
+            url: '/AssetCategory/AssetTagList',
+            type: 'POST',
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({ _assetCode: assetCode }),
+            dataType: "json",
+            success: function (response) {
+                $('select#AssetTAG').html('');
+                var result = '';
+                result += "<option value='0' selected>SELECT ASSET INITIAL TAG</option>";
+                if (response.length > 0 && response != "ERROR") {
+
+
+                    for (var i = 0; response.length > i; i++) {
+
+                        result += "<option id='" + response[i].ASSET_IDFNO + "' data-net_val='" + response[i].NET_AMT + "'  data-book_val='" + response[i].BOOK_VALUE + "' value='" + response[i].ASSET_IDFNO + "' onclick =getVal('" + response[i].ASSET_INTTAG + "') >" + response[i].ASSET_INTTAG + "</option>";
+
+
+
+                    }
+
+                    $('select#AssetTAG').append(result);
+
+                }
+            }
+        });
+    }
+    $('#AssetTAG').on('change', function () {
+        var AssInTAG = $("select#AssetTAG").val();
+        $.ajax({
+            url: '/AssetCategory/getVal',
+            type: 'POST',
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify(
+                {
+                    _AssInTAG: AssInTAG
+                }
+            ),
+            dataType: "json",
+            success: function (response) {
+
+                if (response.length > 0 && response != "ERROR") {
+
+                    for (var i = 0; response.length > i; i++) {
+                        /* alert(response[i].NET_AMT);*/
+                        $("#NetValue").val(response[i].NET_AMT);
+                        $("#BookValue").val(response[i].BOOK_VALUE);
+                    }
+                }
+            }
+        });
+
+    });
+
+    $("#submitRevaluation").click(function () {
+
+        var Class = $('select#ClassList').val();
+
+        var AssetTAG = $('select#AssetTAG').val();
+        var ReAmount = $('#ReAmount').val();
+        var date = $('#date').val();
+        var NetValue = $('#NetValue').val();
+        var BookValue = $('#BookValue').val();
+        var ADJ_COST = $('#ADJ_COST').val();
+        var RE_RSV = $('#RE_RSV').val();
+
+
+            $.ajax({
+                type: "POST",
+                url: '/AssetCategory/SaveRevaluation',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify({
+                    ClassList: Class,
+                    AssetTAG: AssetTAG,
+                    ReAmount: ReAmount,
+                    date: date,
+                    NetValue: NetValue,
+                    BookValue: BookValue,
+                    ADJ_COST: ADJ_COST,
+                    RE_RSV: RE_RSV
+
+                }),
+
+                success: function (response) {
+                    if (response != null) {
+
+                        if (response == 'Success') {
+                            //Toast.fire({
+                            //    icon: 'success',
+                            //    title: response
+                            //});
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'success',
+
+                            });
+                        
+                            $("#ClassList").val("");
+                            $("#AssetTAG").val("");
+                            $("#ReAmount").val("");
+                            $("#date").val("");
+                            $("#NetValue").val("");
+                            $("#BookValue").val("");
+                            $("#ADJ_COST").val("");
+                            $("#RE_RSV").val(""); 
+                         /*   $('.addnew').show();*/
+                            setTimeout(function () {
+                                location.reload();
+                            }, 1500);
+                        } else {
+                            Toast.fire({
+                                icon: 'error',
+                                title: response
+                            });
+                            $('.addnew').show();
+                        }
+                    }
+                },
+
+                error: function () {
+
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'error'
+                    });
+                }
+            });
+        
+    });
+</script>
+
+
+

@@ -1,0 +1,1067 @@
+﻿@using System.Data
+@using System.Collections
+@using FIXED_ASSET.DTO
+@using System.Data
+@using System.Collections
+
+@{
+    ViewBag.Title = "RawMaterials";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Scripts/sweetalert.js"></script>
+<link href="~/Content/css/sweetalert2.css" />
+<link href="~/Content/css/sweetalert2.min.css" />
+
+<link href="~/Content/css/select2.css" rel="stylesheet" />
+<link href="~/Content/Custom/_Item.css" rel="stylesheet" />
+<script src="~/Content/js/select2.full.min.js"></script>
+<link href="~/Content/css/bootstrap3-wysihtml5.min.css" rel="stylesheet" />
+<link href="~/Content/css/bootstrap-select.css" rel="stylesheet" />
+<script src="~/Content/js/bootstrap3-wysihtml5.all.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<link href="~/Content/iCheck/all.css" rel="stylesheet" />
+<script src="~/Content/iCheck/icheck.min.js"></script>
+<script src="~/Content/js/select2.full.min.js"></script>
+<link href="~/Content/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+<script src="~/Content/js/dataTables.bootstrap.min.js"></script>
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<style type="text/css">
+
+    .swal2-popup {
+        font-size: 1.5rem !important;
+    }
+
+    div.addnew {
+        display: none
+    }
+
+    html {
+        overflow-y: scroll;
+    }
+</style>
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        @ViewBag.Title
+
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+</section>
+
+
+<section class="content">
+    <!-- Default box -->
+    <div class="box box-solid">
+        <div class="box-header">
+            <h3 class="box-title">
+                Product &nbsp;&nbsp;&nbsp;
+                <strong class="articleInfo">
+                    <span class="categoryShortCode" style="color:#16a085;"></span>
+                    <span class="subcategoryShortCode" style="color:#16a085;"></span>
+                    <span class="segmentShortCode" style="color:#16a085;"></span>
+                    <span class="gradeShortCode" style="color:#16a085;"></span>
+                    <span id="fullBarcode" style="color:#16a085; display:none;"></span>
+                </strong>
+            </h3>
+
+        </div>
+
+
+        <div class="box-body">
+            <div class="box-group" id="accordion">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                Product
+                            </a>
+                        </h4>
+
+                    </div>
+                    <div id="collapseOne" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="Category">Product Category</label>
+                                            <select class="form-control select2" style="width:100%;" id="product_category" name="product_category" data-plugin="xin_select" data-placeholder="product_category" tabindex="-1" aria-hidden="true"></select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="Color">Product Code</label>
+                                            <input type="text" class="form-control" style="width:100%;" id="product_code" name="product_code" data-plugin="xin_select" data-placeholder="product_code" tabindex="-1" aria-hidden="true" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+
+                                        <div class="form-group">
+                                            <label for="Segment">Name</label>
+                                            <input type="text" class="form-control" style="width:100%;" id="name" name="name" data-plugin="xin_select" data-placeholder="name" tabindex="-1" aria-hidden="true"></input>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="Type">Type</label>
+                                            @*<input type="text" min="0" class="form-control" style="width:100%;" onkeydown="return OnlyNumeric(this)" id="type" placeholder="Type">*@
+                                            <select class="form-control" min="0" style="width:100%;" id="type">
+                                                <option value="Raw Materials">Raw Marerials</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="Brand">Brand</label>
+                                            @*<input type="text" min="0" class="form-control" style="width:100%;" id="brand" onkeydown="return OnlyNumeric(this)" placeholder="Brand">*@
+                                            <select class="form-control" min="0" style="width:100%;" id="brand">
+
+                                                <option selected value="">Otobi</option>
+                                                <option value="">Partex</option>
+                                                <option value="">Hatil</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="Barcode">Barcode</label>
+                                            <input type="number" min="0" class="form-control" style="width:100%;" id="barcode" onkeydown="return OnlyNumeric(this)" placeholder="Barcode">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                @*<div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="Brand">Brand</label>
+                                                <select class="form-control select2" style="width:100%;" id="brand_id" data-plugin="xin_select" data-placeholder="Brand Name" tabindex="-1" aria-hidden="true"></select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="Season">Season</label>
+                                                <select class="form-control select2" style="width:100%;" id="selectSession" name="article_id"></select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="Material">Material</label>
+                                                <select class="form-control select2" style="width:100%;" id="selectMaterial" name="article_id"></select>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="Material">Grade</label>
+                                                <select class="form-control select2" style="width:100%;" id="selectGrade" name="article_id"></select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="artical_no">Article No</label>
+                                                <input type="text" class="form-control" id="artical_no" placeholder="Artical No">
+
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="artical_name">Article Name</label>
+                                                <input type="text" class="form-control" id="artical_name" placeholder="Artical Name">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="short_name">Short Name</label>
+                                                <input type="text" class="form-control" id="short_name" placeholder="Short Name">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="article_type">Article Type</label>
+                                                <input type="hidden" class="form-control" id="article_type_value" value="0">
+                                                <select class="form-control select2" style="width:100%;" id="article_type" name="article_type" data-plugin="xin_select" data-placeholder="Article Type" tabindex="-1" aria-hidden="true">
+                                                    <option value="">Select One</option>
+                                                    <option value="STANDARD">Standard</option>
+                                                    <option value="MATRIX" id="matrixChange">Matrix</option>
+                                                    <option value="COMPOSITE">Composite</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="article_source">Article Source</label>
+                                                <select class="form-control select2" style="width:100%;" id="article_source" name="article_source" data-plugin="xin_select" data-placeholder="Article Source" tabindex="-1" aria-hidden="true">
+                                                    <option value="">SELECT ONE</option>
+                                                    <option value="LL">FACTORY</option>
+                                                    <option value="LA">FACTORY(CKD)</option>
+                                                    <option value="FF">IMPORTED</option>
+                                                    <option value="CL">OUTSOURCE</option>
+                                                    <option value="CA">OUTSOURCE(IRM)</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+
+                                    <div class="row">
+
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="supplier_id">Supplier</label>
+                                                <select class="form-control select2" style="width:100%;" id="supplier_id" name="supplier_id" data-plugin="xin_select" data-placeholder="Supplier Name" tabindex="-1" aria-hidden="true"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+
+                                        <div class="col-md-9">
+                                            <div class="form-group">
+                                                <label for="short_name">Description :</label>
+                                                <textarea class="textarea" id="message" placeholder="Place some text here"
+                                                          style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;"></textarea>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="item image">Article Image :</label><br />
+                                                <div id="valid_msg" />
+                                                <div class="col-md-12"></div>
+                                                <div class="btn btn-primary" style="margin-left: -15px;">
+                                                    <input type="file" name="Product_image" id="imageBrowes">
+                                                </div>
+                                                <div id="imgPreview" class="thumbnail" style="display:none">
+                                                    <img class="img-responsive" id="targetImg" />
+                                                    <div class="caption">
+                                                        <a onclick="ClearPreview()"><i class="glyphicon glyphicon-trash"></i></a>
+                                                        <span id="description"></span>
+                                                    </div>
+                                                    <a href="#" class="btn btn-default"> Upload </a>
+                                                    <input type="hidden" id="imageName" name="name" />
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+
+
+                                    </div>*@
+
+
+                                @*//FORM*@
+                                @*<form role="form"></form>
+                                    <div class="box-body">
+                                        <div class="panel panel-primary col-md-6 center-block" style="float: none;">
+                                            <div class="panel-body">
+                                                <fieldset>
+
+                                                    <div class="form-group">
+                                                        <label for="Product">Product Category</label>
+
+                                                        <input type="text" class="form-control" id="product_category" placeholder="product_category">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="Brand">Product Code</label>
+
+                                                        <input type="text" class="form-control" id="product_code" placeholder="product_code">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="Product">Name</label>
+
+                                                        <input type="text" class="form-control" id="name" placeholder="name">
+                                                    </div>
+
+
+                                                </fieldset>
+                                            </div>
+                                        </div>
+                                    </div>*@
+
+                                <div class="box-footer with-border">
+                                    <br />
+                                    <div class="box-tools pull-right">
+                                        <button type="button" class="btn btn-box-tool show-form text-info bg-blue-gradient">N E X T</button>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseSix">
+                                General Information
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseSix" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Size">Size</label>
+                                            <input type="text" min="0" class="form-control" onkeydown="return OnlyNumeric(this)" id="size" placeholder="Size">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="UOM">UOM</label>
+                                            @*<input type="number" min="0" class="form-control" id="s_uom" onkeydown="return OnlyNumeric(this)" placeholder="Unit Of Measure">*@
+                                            <select class="form-control" min="0" style="width:100%;" id="s_uom">
+
+                                                <option selected value="">Feet</option>
+                                                <option value="">Inche</option>
+                                                <option value="">Piece</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Weight">Weight</label>
+                                            <input type="text" min="0" class="form-control" id="weight" onkeydown="return OnlyNumeric(this)" placeholder="Weight">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="">UOM</label>
+                                            @*<input type="number" min="0" class="form-control" id="w_uom" onkeydown="return OnlyNumeric(this)" placeholder="Unit Of Measure">*@
+                                            <select class="form-control" min="0" style="width:100%;" id="w_uom">
+
+                                                <option selected value="">Feet</option>
+                                                <option value="">Inche</option>
+                                                <option value="">Piece</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                @*<div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="Type">Type</label>
+                                                <input type="text" min="0" class="form-control" onkeydown="return OnlyNumeric(this)" id="type" placeholder="Type">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="Brand">Brand</label>
+                                                <input type="text" min="0" class="form-control" id="brand" onkeydown="return OnlyNumeric(this)" placeholder="Brand">
+                                            </div>
+                                        </div>
+                                    </div>*@
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Colour">Colour</label>
+                                            @*<input type="number" min="0" class="form-control" id="colour" onkeydown="return OnlyNumeric(this)" placeholder="Colour">*@
+                                            <select class="form-control" min="0" style="width:100%;" id="colour">
+
+                                                <option selected value="">Red</option>
+                                                <option value="">Brown</option>
+                                                <option value="">Black</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    @*<div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="Barcode">Barcode</label>
+                                                <input type="number" min="0" class="form-control" id="barcode" onkeydown="return OnlyNumeric(this)" placeholder="Barcode">
+                                            </div>
+                                        </div>*@
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Unit">Primary UOM</label>
+                                            @*<input type="number" min="0" class="form-control" id="uom" onkeydown="return OnlyNumeric(this)" placeholder="Unit Of Measure">*@
+                                            <select class="form-control" min="0" style="width:100%;" id="p_uom">
+
+                                                <option selected value="">Feet</option>
+                                                <option value="">Inche</option>
+                                                <option value="">Piece</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Price">Price</label>
+                                            <input type="number" min="0" class="form-control" id="price" @*onkeydown="return OnlyNumeric(this)"*@ placeholder="Price">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Quantity">Quantity</label>
+                                            <input type="number" min="0" class="form-control" id="quantity" onkeydown="return OnlyNumeric(this)" placeholder="Quantity">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <label for="Dimension">Dimension</label>
+
+                                <div class="box box-primary " style="width:100%; ">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="Brand">Height</label>
+                                                <input type="text" class="form-control" id="height" placeholder="Height">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="Brand">Width</label>
+                                                <input type="text" class="form-control" id="width" placeholder="Width">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="Brand">Length</label>
+                                                <input type="text" class="form-control" id="length" placeholder="Length">
+                                            </div>
+
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="Brand">UOM</label>
+                                                @*<input type="text" class="form-control" id="uom" placeholder="Unit Of Measure">*@
+                                                <select class="form-control" min="0" style="width:100%;" id="uom">
+
+                                                    <option selected value="">Feet</option>
+                                                    <option value="">Inche</option>
+                                                    <option value="">Piece</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @*<div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="Purchase">Purchase Cost</label>
+                                                <input type="number" min="0" class="form-control" id="purchase_cost" onkeydown="return OnlyNumeric(this)" placeholder="Purchase Cost">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="article_source">VAT Rate</label>
+                                                <select class="form-control select2" style="width:100%;" id="vat_rate" name="vat_rate" data-placeholder="VAT Rate">
+                                                    <option value="">Select One</option>
+                                                    <option value="0">0%</option>
+                                                    <option value="5">5%</option>
+                                                    <option value="7.5">7.5%</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>*@
+                                <div class="box-footer with-border">
+                                    <br />
+                                    <div class="box-tools pull-right">
+                                        <button type="button" class="btn btn-box-tool show-form text-info bg-blue-gradient">N E X T</button>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+
+
+                @*<div class="panel panel-default panel-hide">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="true">
+                                    <span>Article Variant</span>
+                                </a>
+                            </h4>
+                        </div>
+                        <div class="panel-collapse collapse article-variant">
+                            <div class="panel-body">
+                                <div class="incomeArea" style="border:1px solid #ccc; margin-bottom:20px; padding:10px;">
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label for="Article Variant">Article Variant Select</label>
+                                                    <input type="text" class="form-control" readonly value="Gender">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <label for="Segment">Select Gender</label><br />
+                                                <select class="form-control select2" multiple style="width:100%;" id="selectGender" name="article_id"></select>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label for="Article Variant">Article Variant Select</label>
+                                                    <input type="text" class="form-control" readonly value="Color">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <label for="Segment">Color</label><br />
+                                                <input type="hidden" class="form-control" id="colorvalue" value="0">
+                                                <select class="form-control select2" style="width:100%;" multiple id="selectColor" data-2digit="" name="article_id"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+
+                                        <div class="form-group">
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label for="Article Variant">Article Variant Select</label>
+                                                    <input type="text" class="form-control" readonly value="Size">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <label for="Size">Select Size</label><br />
+                                                <select class="form-control select2" multiple style="width:100%;" id="selectSize" name="article_id"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label for="Article Variant">Article Variant Select</label>
+                                                    <input type="text" class="form-control" readonly value="Style">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <label for="Style">Select Style</label><br />
+                                                <select class="form-control select2" multiple style="width:100%;" id="selectStyle" name="article_id"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label for="Article Variant">Article Variant Select</label>
+                                                    <input type="text" class="form-control" readonly value="Design">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <label for="Style">Select Design</label><br />
+                                                <select class="form-control select2" multiple style="width:100%;" id="selectDesign" name="article_id"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+
+
+
+
+
+
+                                </div>
+
+
+
+
+
+
+
+
+
+                                <div class="box-body no-padding">
+                                    <div class="row">
+                                        <div class="col-md-12 table-responsive">
+                                            <table id="attributeTable" class="table table-striped compact hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="text-align:center">Variant Name</th>
+
+                                                        <th style="text-align:center">Standard Price</th>
+                                                        <th style="text-align:center">Wholesale Price</th>
+                                                        <th style="text-align:center">Franchise Price</th>
+                                                        <th style="text-align:center">Dealer Price</th>
+                                                        <th style="text-align:center">Institute Price</th>
+                                                        <th style="text-align:center">Other Price</th>
+                                                        <th style="text-align:center">Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+                            </div>
+                        </div>
+                    </div>*@
+
+                <div class="panel panel-default" id="">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                                Purchasing
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseTwo" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Level">Reorder Level</label>
+                                            <input type="number" min="0" class="form-control" onkeydown="return OnlyNumeric(this)" id="reorder_level" placeholder="Reorder Level">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Quantity">Max Qty</label>
+                                            <input type="number" min="0" class="form-control" id="max_qty" onkeydown="return OnlyNumeric(this)" placeholder="Max Qty">
+                                        </div>
+                                    </div>
+
+                                    @*<div class="col-md-4">
+                                            <br />
+
+                                            <button type="submit" class="btn btn-primary" id="submitBrand" onclick="addcat();">A D D</button>
+
+
+                                        </div>*@
+
+                                </div>
+                                <!--<table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Vendor</th>
+                                        <th>Price</th>
+                                        <th>UOM</th>
+                                        <th>Min Ord Qty</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <input type="text" list="Vendor" />
+                                            <datalist id="Vendor">
+                                                <option>Mary</option>
+                                                <option>Jany</option>
+                                                <option>Vaer</option>
+                                                <option>Radf</option>
+                                            </datalist>
+                                        </td>
+                                        <td>
+                                            <input type="text" list="Price" />-->
+                                @*<datalist id="Price">
+                                        <option>100000</option>
+                                        <option>Jany</option>
+                                        <option>Vaer</option>
+                                        <option>Radf</option>
+                                    </datalist>*@
+                                <!--</td>
+                                <td>
+                                    <input type="text" list="UOM" />
+                                    <datalist id="UOM">
+                                        <option>Feet</option>
+                                        <option>Inche</option>
+
+                                    </datalist>
+                                </td>
+                                <td>
+                                    <input type="text" list="Min Ord Qty" />-->
+                                @*<datalist id="Vendor">
+                                        <option>Mary</option>
+                                        <option>Jany</option>
+                                        <option>Vaer</option>
+                                        <option>Radf</option>
+                                    </datalist>*@
+                                <!--</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" list="Vendor" />
+                                                <datalist id="Vendor">
+                                                    <option>Mary</option>
+                                                    <option>Jany</option>
+                                                    <option>Vaer</option>
+                                                    <option>Radf</option>
+                                                </datalist>
+                                            </td>
+                                            <td><input type="text" list="Price" /></td>
+                                            <td>
+                                                <input type="text" list="UOM" />
+                                                <datalist id="UOM">
+                                                    <option>Feet</option>
+                                                    <option>Inche</option>
+
+                                                </datalist>
+                                            </td>
+                                            <td> <input type="text" list="Min Ord Qty" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" list="Vendor" />
+                                                <datalist id="Vendor">
+                                                    <option>Mary</option>
+                                                    <option>Jany</option>
+                                                    <option>Vaer</option>
+                                                    <option>Radf</option>
+                                                </datalist>
+                                            </td>
+                                            <td><input type="text" list="Price" /></td>
+                                            <td>
+                                                <input type="text" list="UOM" />
+                                                <datalist id="UOM">
+                                                    <option>Feet</option>
+                                                    <option>Inche</option>
+
+                                                </datalist>
+                                            </td>
+                                            <td> <input type="text" list="Min Ord Qty" /></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="text" list="Vendor" />
+                                                <datalist id="Vendor">
+                                                    <option>Mary</option>
+                                                    <option>Jany</option>
+                                                    <option>Vaer</option>
+                                                    <option>Radf</option>
+                                                </datalist>
+                                            </td>
+                                            <td><input type="text" list="Price" /></td>
+                                            <td>
+                                                <input type="text" list="UOM" />
+                                                <datalist id="UOM">
+                                                    <option>Feet</option>
+                                                    <option>Inche</option>
+
+                                                </datalist>
+                                            </td>
+                                            <td> <input type="text" list="Min Ord Qty" /></td>
+                                        </tr>
+                                    </tbody>
+                                </table>-->
+                                <div class="box box-primary " style="width:100%; ">
+                                    <table id="bankTable" class="table">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">Vendor</th>
+                                                <th class="text-center">Price</th>
+                                                <th class="text-center">UOM</th>
+                                                <th class="text-center">Min Ord Qty</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody id="BankTableMaster">
+                                            <tr id="0">
+                                                <td class="text-center">
+                                                    <select type="text" id="Vendor_0" style="width:150px;" onchange="District(0)" name="Vendor[0]" data-number="0" placeholder="Vendor" class="form-control Vendor"></select>
+
+                                                </td>
+                                                <td class="text-center">
+                                                    @*<select type="text" id="BankDistrict_0" style="width:100px;" name="BankDistrict" onchange="Branch(0)" placeholder="District" class="form-control BankDistrict"></select>*@
+                                                    <input type="text" class="form-control" id="price" placeholder="Price">
+                                                </td>
+                                                <td class="text-center">
+                                                    @*<select type="text" id="BranchName_0" style="width:100px;" name="BranchName" placeholder="Branch" class="form-control BranchName"></select>*@
+                                                    @*<input type="text" class="form-control" id="uom" placeholder="Unit Of Measure">*@
+                                                    <select class="form-control" min="0" style="width:100%;" id="uom">
+
+                                                        <option selected value="">Feet</option>
+                                                        <option value="">Inche</option>
+                                                        <option value="">Piece</option>
+                                                    </select>
+                                                </td>
+                                                <td class="text-center">
+                                                    <input type="text" id="min_ord_qty" name="Min Ord Qty" placeholder="Min Ord Qty" class="form-control AccHolder" />
+
+                                                </td>
+
+
+
+                                                <td class="text-center">
+                                                    <button class="btn btn-success" type="button" id="addVendorRow"> <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> </button>
+                                                </td>
+                                                <td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+
+                                        </tfoot>
+                                    </table>
+                                </div>
+
+
+                                <div class="box-footer with-border">
+                                    <br />
+                                    <div class="box-tools pull-right">
+                                        <button type="button" class="btn btn-box-tool show-form text-info bg-blue-gradient">N E X T</button>
+                                    </div>
+                                </div>
+
+
+                            </fieldset>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                                Others
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseThree" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Sold">Sold As</label>
+                                            @*<input type="number" min="0" class="form-control" onkeydown="return OnlyNumeric(this)" id="sold_as" placeholder="Sold As">*@
+                                            <select class="form-control" min="0" style="width:100%;" id="sold_as">
+
+                                                <option selected value=""></option>
+                                                <option value="">1</option>
+                                                <option value="">2</option>
+                                                <option value="">3</option>
+
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Sold">Conversion</label>
+                                            <input type="text" min="0" class="form-control" id="s_conversion" onkeydown="return OnlyNumeric(this)" placeholder="S_Conversion">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Used">Used As</label>
+                                            @*<input type="number" min="0" class="form-control" id="used_as" onkeydown="return OnlyNumeric(this)" placeholder="Used As">*@
+                                            <select class="form-control" min="0" style="width:100%;" id="used_as">
+
+                                                <option selected value=""></option>
+                                                <option value="">1</option>
+                                                <option value="">2</option>
+                                                <option value="">3</option>
+
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Used">Conversion</label>
+                                            <input type="text" min="0" class="form-control" id="u_conversion" onkeydown="return OnlyNumeric(this)" placeholder="U_Conversion">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Purchase">Purchase As</label>
+                                            @*<input type="number" min="0" class="form-control" id="purchase_as" onkeydown="return OnlyNumeric(this)" placeholder="Purchase As">*@
+                                            <select class="form-control" min="0" style="width:100%;" id="purchase_as">
+
+                                                <option selected value=""></option>
+                                                <option value="">1</option>
+                                                <option value="">2</option>
+                                                <option value="">3</option>
+
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Purchase">Conversion</label>
+                                            <input type="text" min="0" class="form-control" id="p_conversion" onkeydown="return OnlyNumeric(this)" placeholder="P_Conversion">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                @*<div class="box-footer with-border">
+                                    <br />
+                                    <div class="box-tools pull-right">
+                                        <button type="button" class="btn btn-box-tool show-form text-info bg-blue-gradient">N E X T</button>
+                                    </div>
+                                </div>*@
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+
+                <!--<div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse8">
+                                Others
+                            </a>
+                        </h4>
+                    </div>
+
+                    <div id="collapse8" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Size">Size</label>
+                                            <input type="number" min="0" class="form-control" onkeydown="return OnlyNumeric(this)" id="size" placeholder="Size">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="UOM">UOM</label>
+                                            <input type="number" min="0" class="form-control" id="s_uom" onkeydown="return OnlyNumeric(this)" placeholder="Unit Of Measure">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Weight">Weight</label>
+                                            <input type="number" min="0" class="form-control" id="weight" onkeydown="return OnlyNumeric(this)" placeholder="Weight">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="">UOM</label>
+                                            <input type="number" min="0" class="form-control" id="w_uom" onkeydown="return OnlyNumeric(this)" placeholder="Unit Of Measure">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Colour">Colour</label>
+                                            <input type="number" min="0" class="form-control" id="colour" onkeydown="return OnlyNumeric(this)" placeholder="Colour">
+                                        </div>
+                                    </div>-->
+                @*<div class="col-md-6">
+                        <div class="form-group">
+                            <label for="other">Conversion</label>
+                            <input type="number" min="0" class="form-control" id="other" onkeydown="return OnlyNumeric(this)" placeholder="Other Price">
+                        </div>
+                    </div>*@
+                <!--</div>
+
+                                <div class="box box-primary wow fadeInLeft" style="width:100%; ">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="Brand">Height</label>
+                                                <input type="text" class="form-control" id="height" placeholder="Height">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="Brand">Width</label>
+                                                <input type="text" class="form-control" id="width" placeholder="Width">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="Brand">Length</label>
+                                                <input type="text" class="form-control" id="length" placeholder="Length">
+                                            </div>
+
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="Brand">UOM</label>
+                                                <input type="text" class="form-control" id="uom" placeholder="Unit Of Measure">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                    <div class="box-footer with-border">
+                                        <br />
+                                        <div class="box-tools pull-right">
+                                            <button type="button" class="btn btn-box-tool show-form text-info bg-blue-gradient">N E X T</button>
+                                        </div>
+                                    </div>
+                            </fieldset>
+
+                        </div>
+
+                    </div>
+
+
+                </div>-->
+            </div>
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+    </div>
+    <div class="text-right">
+        <button type="button" class="btn btn-default">Cancel</button> &nbsp;&nbsp;
+        <button type="button" class="btn btn-primary" id="btnSubmit" onclick="CheckArtNoExists()">Submit</button>
+    </div>
+
+
+
+
+
+    <!-- /.box -->
+</section>

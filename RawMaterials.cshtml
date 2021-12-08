@@ -1,0 +1,1751 @@
+﻿@using System.Data
+@using System.Collections
+@using FIXED_ASSET.DTO
+@using System.Data
+@using System.Collections
+
+@{
+    ViewBag.Title = "RawMaterials";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Scripts/sweetalert.js"></script>
+<link href="~/Content/css/sweetalert2.css" />
+<link href="~/Content/css/sweetalert2.min.css" />
+
+<link href="~/Content/css/select2.css" rel="stylesheet" />
+<link href="~/Content/Custom/_Item.css" rel="stylesheet" />
+<script src="~/Content/js/select2.full.min.js"></script>
+<link href="~/Content/css/bootstrap3-wysihtml5.min.css" rel="stylesheet" />
+<link href="~/Content/css/bootstrap-select.css" rel="stylesheet" />
+<script src="~/Content/js/bootstrap3-wysihtml5.all.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<link href="~/Content/iCheck/all.css" rel="stylesheet" />
+<script src="~/Content/iCheck/icheck.min.js"></script>
+<script src="~/Content/js/select2.full.min.js"></script>
+<link href="~/Content/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+<script src="~/Content/js/dataTables.bootstrap.min.js"></script>
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<script src="~/Scripts/Product/Vendor.js" type="text/javascript"></script>
+<script src="~/Scripts/Product/Product.js" type="text/javascript"></script>
+
+
+
+<style type="text/css">
+
+    .swal2-popup {
+        font-size: 1.5rem !important;
+    }
+
+    div.addnew {
+        display: none
+    }
+
+    html {
+        overflow-y: scroll;
+    }
+</style>
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        @ViewBag.Title
+
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+</section>
+
+
+<section class="content">
+    <!-- Default box -->
+    <div class="box box-solid">
+        <div class="box-header">
+            <h3 class="box-title">
+                Product &nbsp;&nbsp;&nbsp;
+                <strong class="articleInfo">
+                    <span class="categoryShortCode" style="color:#16a085;"></span>
+                    <span class="subcategoryShortCode" style="color:#16a085;"></span>
+                    <span class="segmentShortCode" style="color:#16a085;"></span>
+                    <span class="gradeShortCode" style="color:#16a085;"></span>
+                    <span id="fullBarcode" style="color:#16a085; display:none;"></span>
+                </strong>
+            </h3>
+
+        </div>
+
+
+        <div class="box-body">
+            <div class="box-group" id="accordion">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                Product
+                            </a>
+                        </h4>
+
+                    </div>
+                    <div id="collapseOne" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-md-4">
+
+                                        <div class="form-group">
+                                            <label for="Type">Type</label>
+                                            <select class="form-control select2" style="width:100%;" id="p_typeList" @*name="product_category"*@ data-plugin="xin_select" @*data-placeholder="product_category"*@ tabindex="-1" aria-hidden="true"></select>
+                                        </div>
+
+
+                                        @*<div class="form-group">
+                                <label for="Type">Type</label>
+                                <input type="text" min="0" class="form-control" style="width:100%;" onkeydown="return OnlyNumeric(this)" id="type" placeholder="Type">
+                                <select class="form-control" min="0" style="width:100%;" id="type">
+                                    <option value="Raw Materials">Raw Marerials</option>
+                                </select>
+
+                            </div>*@
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="Category">Product Category</label>
+                                            <select class="form-control select2" style="width:100%;" id="p_categoryList" @*name="product_category"*@ data-plugin="xin_select" @*data-placeholder="product_category"*@ tabindex="-1" aria-hidden="true"></select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="Category">Brand/ Manufacturing  </label>
+                                            <select class="form-control select2" style="width:100%;" id="p_brandList" @*name="product_category"*@ data-plugin="xin_select" @*data-placeholder="product_category"*@ tabindex="-1" aria-hidden="true"></select>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="Segment">Name</label>
+                                            <input type="text" class="form-control" style="width:100%;" id="name" name="name" data-plugin="xin_select" data-placeholder="name" tabindex="-1" aria-hidden="true"></input>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="Color">Product Code</label>
+                                            <input type="text" class="form-control" style="width:100%;" id="product_code" name="product_code" data-plugin="xin_select" data-placeholder="product_code" tabindex="-1" aria-hidden="true" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="Barcode">Barcode</label>
+                                            <input type="number" min="0" class="form-control" style="width:100%;" id="barcode" onkeydown="return OnlyNumeric(this)" placeholder="Barcode">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*<div id="collapseSix" class="panel-collapse collapse">
+                    <div class="panel-body">*@
+                                <label for="Dimension">General Information</label>
+
+                                <div class="box box-primary " style="width:100%; ">
+                                    @*<fieldset>*@
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="Size">Size</label>
+                                                    <input type="text" min="0" class="form-control" onkeydown="return OnlyNumeric(this)" id="gi_SizeId" placeholder="Size">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="Category"> UOM </label>
+                                                    <select class="form-control select2" style="width:100%;" id="uOMListSize" @*name="product_category"*@ data-plugin="xin_select" @*data-placeholder="product_category"*@ tabindex="-1" aria-hidden="true"></select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="Weight">Weight</label>
+                                                    <input type="text" min="0" class="form-control" id="gi_WeightId" onkeydown="return OnlyNumeric(this)" placeholder="Weight">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="Category">UOM </label>
+                                                    <select class="form-control select2" style="width:100%;" id="uOMListWeight" @*name="product_category"*@ data-plugin="xin_select" @*data-placeholder="product_category"*@ tabindex="-1" aria-hidden="true"></select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="Colour">Colour</label>
+                                                    @*<input type="number" min="0" class="form-control" id="colour" onkeydown="return OnlyNumeric(this)" placeholder="Colour">*@
+                                                    <select class="form-control" min="0" style="width:100%;" id="gi_ColourId">
+
+                                                        <option selected value="1">Red</option>
+                                                        <option value="2">Brown</option>
+                                                        <option value="3">Black</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="Category"> Primary UOM </label>
+                                                    <select class="form-control select2" style="width:100%;" id="uOMListColour" @*name="product_category"*@ data-plugin="xin_select" @*data-placeholder="product_category"*@ tabindex="-1" aria-hidden="true"></select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="Price">Price</label>
+                                                    <input type="number" min="0" class="form-control" id="price" @*onkeydown="return OnlyNumeric(this)"*@ placeholder="Price">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="Quantity">Quantity</label>
+                                                    <input type="number" min="0" class="form-control" id="quantity" onkeydown="return OnlyNumeric(this)" placeholder="Quantity">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <label for="Dimension">Dimension</label>
+
+                                        <div class="box box-primary " style="width:100%; ">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <div class="form-group">
+                                                        <label for="Brand">Height</label>
+                                                        <input type="text" class="form-control" id="height" placeholder="Height">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-group">
+                                                        <label for="Brand">Width</label>
+                                                        <input type="text" class="form-control" id="width" placeholder="Width">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-group">
+                                                        <label for="Brand">Length</label>
+                                                        <input type="text" class="form-control" id="length" placeholder="Length">
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="form-group">
+                                                        <label for="Category">UOM </label>
+                                                        <select class="form-control select2" style="width:100%;" id="uOMListDimension" @*name="product_category"*@ data-plugin="xin_select" @*data-placeholder="product_category"*@ tabindex="-1" aria-hidden="true"></select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    @*</fieldset>*@
+                                </div>
+                                @*</div>*@
+
+
+
+                                <div class="box-footer with-border">
+                                    <br />
+                                    <div class="box-tools pull-right">
+                                        <button type="button" class="btn btn-primary" id="clickEvent">N E X T</button>
+                                       @* <button type="button" class="btn btn-box-tool show-form text-info bg-blue-gradient" onclick="checkfield()" id="nextProduct">N E X T</button>*@
+                                      
+                                        @*<button type="button" class="btn btn-primary" id="submitPurchase">N E X T</button>*@
+
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+
+
+                @*<div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseSix">
+                                General Information
+                            </a>
+                        </h4>
+                    </div>*@
+                    <!--<div id="collapseSix" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Size">Size</label>
+                                            <input type="text" min="0" class="form-control" onkeydown="return OnlyNumeric(this)" id="size" placeholder="Size">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Category">UOM </label>
+                                            <select class="form-control select2" style="width:100%;" id="uOMList"--> @*name="product_category"*@ <!--data-plugin="xin_select"--> @*data-placeholder="product_category"*@ <!--tabindex="-1" aria-hidden="true"></select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Weight">Weight</label>
+                                            <input type="text" min="0" class="form-control" id="weight" onkeydown="return OnlyNumeric(this)" placeholder="Weight">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Category">UOM </label>
+                                            <select class="form-control select2" style="width:100%;" id="uOMList"--> @*name="product_category"*@ <!--data-plugin="xin_select"--> @*data-placeholder="product_category"*@ <!--tabindex="-1" aria-hidden="true"></select>
+                                        </div>
+                                    </div>
+                                </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="Colour">Colour</label>-->
+                                        @*<input type="number" min="0" class="form-control" id="colour" onkeydown="return OnlyNumeric(this)" placeholder="Colour">*@
+                                        <!--<select class="form-control" min="0" style="width:100%;" id="colour">
+
+                                            <option selected value="">Red</option>
+                                            <option value="">Brown</option>
+                                            <option value="">Black</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="Category">UOM </label>
+                                        <select class="form-control select2" style="width:100%;" id="uOMList"--> @*name="product_category"*@ <!--data-plugin="xin_select"--> @*data-placeholder="product_category"*@ <!--tabindex="-1" aria-hidden="true"></select>
+                                    </div>
+                                </div>
+                            </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Price">Price</label>
+                                            <input type="number" min="0" class="form-control" id="price"--> @*onkeydown="return OnlyNumeric(this)"*@ <!--placeholder="Price">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Quantity">Quantity</label>
+                                            <input type="number" min="0" class="form-control" id="quantity" onkeydown="return OnlyNumeric(this)" placeholder="Quantity">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <label for="Dimension">Dimension</label>
+
+                                <div class="box box-primary " style="width:100%; ">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="Brand">Height</label>
+                                                <input type="text" class="form-control" id="height" placeholder="Height">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="Brand">Width</label>
+                                                <input type="text" class="form-control" id="width" placeholder="Width">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="Brand">Length</label>
+                                                <input type="text" class="form-control" id="length" placeholder="Length">
+                                            </div>
+
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="Category">UOM </label>
+                                                <select class="form-control select2" style="width:100%;" id="uOMList"--> @*name="product_category"*@ <!--data-plugin="xin_select"--> @*data-placeholder="product_category"*@ <!--tabindex="-1" aria-hidden="true"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </fieldset>
+                        </div>
+                    </div>-->
+                </div>
+
+
+                <div class="panel panel-default" id="">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                                Purchasing
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseTwo" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Level">Reorder Level</label>
+                                            <input type="number" min="0" class="form-control" onkeydown="return OnlyNumeric(this)" id="reorder_level" placeholder="Reorder Level">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Quantity">Max Qty</label>
+                                            <input type="number" min="0" class="form-control" id="max_qty" onkeydown="return OnlyNumeric(this)" placeholder="Max Qty">
+                                        </div>
+                                    </div>
+                                </div>
+                                <section class="card-body">
+                                    <div class="box box-primary " style="width:100%; ">
+                                        <table id="bankTable" class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center">Vendor</th>
+                                                    <th class="text-center">Price</th>
+                                                    <th class="text-center">UOM</th>
+                                                    <th class="text-center">Min Ord Qty</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody id="BankTableMaster">
+                                                <tr id="0">
+                                                    <td class="text-center">
+                                                        <select class="form-control select2" style="width:100%;" id="vendorList" @*name="product_category"*@ data-plugin="xin_select" @*data-placeholder="product_category"*@ tabindex="-1" aria-hidden="true"></select>
+
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <input type="text" class="form-control AccHolder" id="reOrderPrice" placeholder="Price">
+                                                    </td>
+                                                    <td class="text-center">
+
+                                                        <select class="form-control select2" style="width:100%;" id="uOMListR" @*name="product_category"*@ data-plugin="xin_select" @*data-placeholder="product_category"*@ tabindex="-1" aria-hidden="true"></select>
+
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <input type="text" id="min_ord_qty" name="Min Ord Qty" placeholder="Min Ord Qty" class="form-control AccHolder" />
+
+                                                    </td>
+
+
+                                                    @*<td class="text-right">
+            <button type="submit" class="btn btn-primary" id="submitAssetPeripheralData">ADD</button>
+        </td>
+        <br />
+        <td class="box box-primary" id="peripheralList">
+        </td>*@
+
+                                                    <td class="text-center">
+                                                        @*<a href="javascript:void(0)" class="text-info" id="AddTempMovieBtn">ADD MOVIE</a>*@
+                                                        <button type="submit" href="javascript:void(0)" class="btn btn-primary" id="AddTempMovieBtn">ADD</button>
+                                                    </td>
+
+                                                    <!--<td class="text-center">
+                                                        <button type="submit" class="btn btn-primary" id="submitPurchaseVendorData">ADD</button>-->
+                                                        @*<button class="btn btn-success" type="button" id="addVendorRow"> <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> </button>*@
+                                                    <!--</td>-->
+                                                    @*<td class="box box-primary" id="peripheralList">
+                                                    <td>*@
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+
+                                            </tfoot>
+                                        </table>
+                                    </div>
+
+                                </section>
+                                <section id="MsnContainer">
+                                    <section class="text-center">
+                                        <label class="font-weight-bold text-danger" id="Msn"></label>
+                                    </section>
+                                </section>
+                                <br><br>
+                                <section id="table-container">
+                                    <table class="table table-bordered table-striped" id="table-information">
+                                        <thead>
+                                            <tr class="bg-info text-light font-weight-bold text-center">
+                                                <td>Vendor</td>
+                                                <td>Price</td>
+                                                <td>Unit Of Measurement </td>
+                                                <td>Min Ord Qty</td>
+                                                <td>Actions</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="table-body"></tbody>
+                                    </table>
+                                    @*<section class="text-center">
+                                        <button id="SubmitMoviesBtn" disabled="disabled" class="btn btn-success w-50">SAVE ALL MOVIES</button>
+                                    </section>*@
+                                </section>
+
+
+                                @*<section class="m-3">
+                                    <section class="card">
+                                        <section class="card-header text-center">
+                                            <label class="h3">Create Movies</label>
+                                        </section>
+                                        <section class="card-body">
+                                            <section id="form-container">
+                                                <section class="form-group">
+                                                    <label>Title:</label>
+                                                    <input type="text" placeholder="Title" id="TitleTxt" class="form-control" />
+                                                </section>
+                                                <section class="form-group">
+                                                    <label>Summary:</label>
+                                                    <input type="text" placeholder="Summary" id="SummaryTxt" class="form-control" />
+                                                </section>
+                                                <section class="form-group">
+                                                    <label>Year:</label>
+                                                    <input type="text" placeholder="Year" id="YearTxt" class="form-control" />
+                                                </section>
+                                                <section class="text-center">
+                                                    <a href="javascript:void(0)" class="text-info" id="AddTempMovieBtn">ADD MOVIE</a>
+                                                </section>
+                                            </section>
+                                            <section id="MsnContainer">
+                                                <section class="text-center">
+                                                    <label class="font-weight-bold text-danger" id="Msn"></label>
+                                                </section>
+                                            </section>
+                                            <br><br>
+                                            <section id="table-container">
+                                                <table class="table table-bordered table-striped" id="table-information">
+                                                    <thead>
+                                                        <tr class="bg-info text-light font-weight-bold text-center">
+                                                            <td>Title</td>
+                                                            <td>Summary</td>
+                                                            <td>Year</td>
+                                                            <td>Actions</td>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="table-body"></tbody>
+                                                </table>
+                                                <section class="text-center">
+                                                    <button id="SubmitMoviesBtn" disabled="disabled" class="btn btn-success w-50">SAVE ALL MOVIES</button>
+                                                </section>
+                                            </section>
+                                        </section>
+                                    </section>
+                                </section>*@
+
+                            </fieldset>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                                Others
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseThree" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Sold">Sold As</label>
+                                            @*<input type="number" min="0" class="form-control" onkeydown="return OnlyNumeric(this)" id="sold_as" placeholder="Sold As">*@
+                                            <select class="form-control" min="0" style="width:100%;" id="sold_as">
+
+                                                <option selected value=""></option>
+                                                <option value="">1</option>
+                                                <option value="">2</option>
+                                                <option value="">3</option>
+
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Sold">Conversion</label>
+                                            <input type="text" min="0" class="form-control" id="s_conversion" onkeydown="return OnlyNumeric(this)" placeholder="S_Conversion">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Used">Used As</label>
+                                            @*<input type="number" min="0" class="form-control" id="used_as" onkeydown="return OnlyNumeric(this)" placeholder="Used As">*@
+                                            <select class="form-control" min="0" style="width:100%;" id="used_as">
+
+                                                <option selected value=""></option>
+                                                <option value="">1</option>
+                                                <option value="">2</option>
+                                                <option value="">3</option>
+
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Used">Conversion</label>
+                                            <input type="text" min="0" class="form-control" id="u_conversion" onkeydown="return OnlyNumeric(this)" placeholder="U_Conversion">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Purchase">Purchase As</label>
+                                            @*<input type="number" min="0" class="form-control" id="purchase_as" onkeydown="return OnlyNumeric(this)" placeholder="Purchase As">*@
+                                            <select class="form-control" min="0" style="width:100%;" id="purchase_as">
+
+                                                <option selected value=""></option>
+                                                <option value="">1</option>
+                                                <option value="">2</option>
+                                                <option value="">3</option>
+
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Purchase">Conversion</label>
+                                            <input type="text" min="0" class="form-control" id="p_conversion" onkeydown="return OnlyNumeric(this)" placeholder="P_Conversion">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                @*<div class="box-footer with-border">
+                                    <br />
+                                    <div class="box-tools pull-right">
+                                        <button type="button" class="btn btn-box-tool show-form text-info bg-blue-gradient">N E X T</button>
+                                    </div>
+                                </div>*@
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    <div class="text-right">
+        <button type="button" class="btn btn-default">Cancel</button> &nbsp;&nbsp;
+        <button type="button" class="btn btn-primary" id="submitPurchase">Submit</button>
+
+        @*<button type="button" class="btn btn-primary" id="btnSubmit" onclick="CheckArtNoExists()">Submit</button>*@
+    </div>
+
+
+
+    <!-- /.box -->
+</section>
+
+
+@*<script>
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 1500,
+
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    });
+    $(document).ready(function () {
+
+        $('.select2').select2();
+        // $("#myTabContent").hide();
+        $("#modal_open").hide();
+        p_typeList();
+        uOMList();
+        vendorList();
+        ManufactureList(0);
+        SupplierList(0);
+
+        $('.addnew').hide();
+        $('.show-form').click(function () {
+            $('.addnew').show();
+            $('.show-form').hide();
+            $('#updateCategory').hide();
+        });
+        $('.hide-form').click(function () {
+            $('.addnew').hide();
+            $('.show-form').show();
+        });
+
+
+    });
+
+   
+
+
+
+
+
+
+
+
+
+    $("#submitPurchaseVendorData").click(function () {
+        debugger;
+        //var vendorList = $('#vendorList ').val();
+        //var reOrderPrice = $('#reOrderPrice ').val();
+        //var uOMList = $('#uOMListR ').val();
+        //var min_ord_qty = $('#min_ord_qty ').val();
+
+        if ($("#vendorList").val() == 0 || $("#reOrderPrice").val() == 0 || $("#uOMListR").val() == 0 || $("#min_ord_qty").val() == 0) {
+            Toast.fire({
+                icon: 'error',
+                title: 'CHECK THE EMPTY FIELDS'
+            });
+
+
+
+            return false;
+        } else {
+
+            var vendorList = $('#vendorList ').val();
+            var reOrderPrice = $('#reOrderPrice ').val();
+            var uOMList = $('#uOMListR ').val();
+            var min_ord_qty = $('#min_ord_qty ').val();
+            debugger;
+
+            //ajax passing data to controller
+            $.ajax({
+
+                type: "POST",
+                url: '/Product/SupplierSave',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+
+                data: JSON.stringify({
+                    vendorList: vendorList,
+                    reOrderPrice: reOrderPrice,
+                    uOMList: uOMList,
+                    min_ord_qty: min_ord_qty
+                }),
+                success: function (response) {
+                    if (response != null) {
+
+
+                        Toast.fire({
+                            icon: 'success',
+                            title: "ITEM SUCCESSFULLY ADDED"
+                        });
+
+
+
+
+                        //$("#quantityp").val("");
+                        //$("#Description").val("");
+
+                        //$('.addnew').show();
+                        //getPeripheralData();
+                        //getcomponentdatatable();
+
+                        //$('#collapseSix').addClass('in');
+                        //$('#collapseSix').attr('aria-expanded', 'true');
+                    }
+
+                },
+
+
+
+                error: function () {
+
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'error'
+                    });
+
+                }
+            });
+        }
+
+    });
+
+    $("#submitPurchase").click(function () {
+        debugger;
+
+
+        var p_typeId = $('#p_typeList').val();
+        var p_categoryId = $('#p_categoryList').val();
+        var P_brandId = $('#p_brandList').val();
+        var p_name = $("#name").val();
+        var p_code = $("#product_code").val();
+        var p_barcode = $("#barcode").val();
+        var gi_SizeId = $("#gi_SizeId").val();
+        var gi_WeightId = $("#gi_WeightId").val();
+        var gi_ColourId = $("#gi_ColourId").val();
+        var p_size = $("#uOMListSize").val();
+        var p_weight = $("#uOMListWeight").val();
+        var p_colour = $("#uOMListColour").val();
+        var p_price = $("#price").val();
+        var p_quantity = $("#quantity").val();
+        var p_height = $("#height").val();
+        var p_width = $("#width").val();
+        var p_length = $("#length").val();
+        var p_uomDimension = $("#uOMListDimension").val();
+
+        $.ajax({
+
+            type: "POST",
+            url: '/Product/SaveProduct',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response === 'Success') {
+                    Toast.fire({
+                        icon: 'success',
+                        title: "ASSET SUCCESSFULLY CREATED"
+                    });
+
+                    //$("#masterTag").val("");
+                    //$("#Name").val("");
+                    //$("#p_categoryList").val("");
+                    //$("#Description").val("");
+                    //$("#Size").val("");
+                    //$('.addnew').show();
+                    //$("#myTabContent_").hide();
+                    //$("#articleInfo").html('');
+                    //$("#myTabContent").show();
+                    //var res = "<option id='" + p_categoryList + "' title='" +
+                    //    p_categoryList_text + "' value='" + p_categoryList + "'>" + p_categoryList_text + "</option>";
+
+                    //$("#p_categoryListB").append(res);
+
+                    //res = "<option id='" + CategoryList + "' title='" +
+                    //    CategoryList_text + "' value='" + CategoryList + "'>" + CategoryList_text + "</option>";
+
+
+                    //$("#CategoryListB").append(res);
+
+
+
+
+
+                    //res = "<option id='" + SegmentList + "' title='" +
+                    //    SegmentList_text + "' value='" + SegmentList + "'>" + SegmentList_text + "</option>";
+
+                    //$("#SegmentListB").append(res);
+
+
+
+                    //AssetList(SegmentList, Name);
+
+                }
+                //else {
+                //    Toast.fire({
+                //        icon: 'info',
+                //        title: "ASSET/MODEL/MST-CODE ALREADY EXISTS"
+                //    });
+                //}
+
+            },
+
+
+            data: JSON.stringify({
+                p_typeId: p_typeId,
+                p_categoryId: p_categoryId,
+                P_brandId: P_brandId,
+                p_name: p_name,
+                p_code: p_code,
+                p_barcode: p_barcode,
+                gi_SizeId: gi_SizeId,
+                gi_WeightId: gi_WeightId,
+                gi_ColourId: gi_ColourId,
+                p_size: p_size,
+                p_weight: p_weight,
+                p_colour: p_colour,
+                p_price: p_price,
+                p_quantity: p_quantity,
+                p_height: p_height,
+                p_width: p_width,
+                p_length: p_length,
+                p_uomDimension: p_uomDimension
+
+            }),
+            error: function () {
+                Toast.fire({
+                    icon: 'error',
+                    title: 'error'
+                });
+            }
+        });
+
+
+
+
+
+    });
+
+
+
+
+    $("#name").change(function () {   // 1st
+
+
+        $("#name").val($("#name").val().toUpperCase());
+        $("#description").val($("#name").val().toUpperCase());
+
+    });
+
+
+    $("#SegmentList").change(function () {
+        var segmentId = $("#SegmentList :selected").val();
+        AssetList(segmentId);
+    });
+
+    $("select#p_typeList").change(function () {
+        //debugger;
+        GetCategoryByp_typeId($('select#p_typeList').val());
+
+        //var vShoertName = $.trim($(this).find(':selected').data('shortname'));
+        //var vSubCategory = $("CategoryList").find(':selected').data('shortname');
+        //$(".classShortCode").html("");
+        //$(".categoryShortCode").html("");
+        //$(".segmentShortCode").html("");
+        //$(".modelShortCode").html("");
+        //$("#fullBarcode").html("");
+
+        //$(".classShortCode").html(vShoertName);
+
+    });
+
+
+
+    function vendorList() {
+        $.ajax({
+            url: '/AssetPurchaseOrder/SupplierList',
+            type: 'POST',
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                $('select#vendorList').html('');
+                var result = '';
+                result += "<option value='0' title='0' selected>--Select Supplier--</option>";
+                if (response.length > 0) {
+
+
+                    for (var i = 0; response.length > i; i++) {
+                        result += "<option id='" + response[i].SUPPLIER_ID + "' data-Outlet_ID='" + response[i].ADDRESS + "' title='" + response[i].NAME + "' value='" + response[i].SUPPLIER_ID + "' data-shortname='" + response[i].SUPPLIER_ID + "'>" + response[i].NAME + "" + "</option>";
+                    }
+
+                } $('select#vendorList').append(result);
+
+            }
+        });
+    }
+
+
+
+
+
+
+
+
+    function uOMList() {
+        //debugger;
+        $.ajax({
+            url: '/Product/GetUOMList',
+            type: 'POST',
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                //debugger;
+
+                if (response.length > 0) {
+                    //console.log(response);
+                    $('select#uOMList').html('');
+                    //$('select#p_categoryListc').html('');
+                    //$('select#p_categoryListp').html('');
+                    var result = '';
+                    result += "<option value='0'>Select UOM </option>";
+                    for (var i = 0; response.length > i; i++) {
+
+                        result += "<option id='" + response[i].UNIT_ID + "'title='" + response[i].NAME + "' value='" + response[i].UNIT_ID + "'>" + response[i].NAME + "</option>";
+
+                    }
+                }
+                $('select#uOMList').append(result);
+                $('select#uOMListR').append(result);
+                $('select#uOMListSize').append(result);
+                $('select#uOMListWeight').append(result);
+                $('select#uOMListColour').append(result);
+                $('select#uOMListDimension').append(result);
+                //$('select#p_categoryListp').append(result);
+
+
+            }
+        });
+    }
+
+
+    function GetCategoryByp_typeId(proTypeId) {
+        //debugger;
+        $.ajax({
+            url: '/Product/GetCategoryByp_typeId',
+            type: 'POST',
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({ proTypeId: proTypeId }),
+            dataType: "json",
+            success: function (response) {
+                //debugger;
+                if (response.length > 0) {
+                    //console.log(response);
+                    $('select#p_categoryList').html('');
+                    //$('select#p_categoryListc').html('');
+                    //$('select#p_categoryListp').html('');
+                    var result = '';
+                    result += "<option value='0'>Select Product Category  </option>";
+                    for (var i = 0; response.length > i; i++) {
+
+                        result += "<option id='" + response[i].PRD_CAT + "'title='" + response[i].CAT_NAME + "' value='" + response[i].PRD_CAT + "'>" + response[i].CAT_NAME + "</option>";
+
+                    }
+                }
+                $('select#p_categoryList').append(result);
+                p_brandList();
+
+            }
+        });
+    }
+
+
+    function p_typeList() {
+        //debugger;
+        $.ajax({
+            url: '/Product/GetPTypeList',
+            type: 'POST',
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                //debugger;
+                if (response.length > 0) {
+                    //console.log(response);
+                    $('select#p_typeList').html('');
+                    //$('select#p_categoryListc').html('');
+                    //$('select#p_categoryListp').html('');
+                    var result = '';
+                    result += "<option value='0'>Select Product Type  </option>";
+                    for (var i = 0; response.length > i; i++) {
+
+                        result += "<option id='" + response[i].PTYP_ID + "'title='" + response[i].DESCRIPTION + "' value='" + response[i].PTYP_ID + "'>" + response[i].DESCRIPTION + "</option>";
+
+                    }
+                }
+                $('select#p_typeList').append(result);
+                //$('select#p_categoryListc').append(result);
+                //$('select#p_categoryListp').append(result);
+
+
+            }
+
+        });
+    }
+
+
+
+    function p_brandList() {
+        debugger;
+        //
+        $.ajax({
+            url: '/Product/GetPBrandList',
+            type: 'POST',
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                debugger;
+                if (response.length > 0) {
+                    //console.log(response);
+                    $('select#p_brandList').html('');
+                    //$('select#p_categoryListc').html('');
+                    //$('select#p_categoryListp').html('');
+                    var result = '';
+                    result += "<option value='0'>Select Brand </option>";
+                    for (var i = 0; response.length > i; i++) {
+
+                        result += "<option id='" + response[i].BRND_ID + "'title='" + response[i].NAME + "' value='" + response[i].BRND_ID + "'>" + response[i].NAME + "</option>";
+
+                    }
+                }
+
+                $('select#p_brandList').append(result);
+                //$('select#p_categoryListc').append(result);
+                //$('select#p_categoryListp').append(result);
+
+
+            }
+        });
+    }
+
+
+
+
+    function ManufactureList(model_list) {
+
+        $.ajax({
+            url: '/AssetCategory/ManufactureItemList',
+            type: 'POST',
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({ _model_list: model_list }),
+            dataType: "json",
+            success: function (response) {
+                if (response.length > 0) {
+                    console.log(response);
+                    $('select#manufacture_list').html('');
+                    var result = '';
+                    result += "<option selected value='0'>Manufacture list</option>";
+                    for (var i = 0; response.length > i; i++) {
+
+                        result += "<option  id='" + response[i].MANF_ID + "'  data-STORAGE_ID='" + response[i].EXTERNAL_ID + "' title='" + response[i].DESCRIPTION + "' value='" + response[i].MANF_ID + "' data-shortname='" + response[i].STATUS + "'>" + response[i].DESCRIPTION + "</option>";
+
+                    }
+                }
+                $('select#manufacture_list').append(result);
+
+
+            }
+        });
+    }
+    function SupplierList(model_list) {
+
+        $.ajax({
+            url: '/AssetCategory/SupplierItemList',
+            type: 'POST',
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({ _model_list: model_list }),
+            dataType: "json",
+            success: function (response) {
+                if (response.length > 0) {
+                    console.log(response);
+                    $('select#SupplierList').html('');
+                    var result = '';
+                    result += "<option selected value='0'>Supplier list</option>";
+                    for (var i = 0; response.length > i; i++) {
+
+                        result += "<option id='" + response[i].SUPPLIER_ID + "'  data-STORAGE_ID='" + response[i].EXTERNAL_ID + "' title='" + response[i].NAME + "' value='" + response[i].SUPPLIER_ID + "' data-shortname='" + response[i].STATUS + "'>" + response[i].NAME + "</option>";
+
+                    }
+                }
+                $('select#SupplierList').append(result);
+
+
+            }
+        });
+    }
+    function CategoryList(classId) {
+        $.ajax({
+            url: '/AssetCategory/CategoryList',
+            type: 'POST',
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({ _classId: classId }),
+            dataType: "json",
+            success: function (response) {
+
+                if (response.length > 0) {
+                    $('select#CategoryList').html('');
+                    $('select#CategoryListc').html('');
+                    $('select#CategoryListp').html('');
+                    var result = '';
+                    result += "<option value='0'>Category Name</option>";
+                    for (var i = 0; response.length > i; i++) {
+                        if (response[i].CAT_ID == $('#CategoryList_edit').val()) {
+                            result += "<option selected value='" + response[i].CAT_ID + "'data-shortname='" + response[i].CODE + "'>" + response[i].DESCRIPTION + "</option>";
+                        }
+                        else {
+                            result += "<option id='" + response[i].CAT_ID + "' data-shortname='" + response[i].CODE + "' data-STORAGE_ID='" + response[i].EXTERNAL_ID + "' title='" + response[i].DESCRIPTION + "' value='" + response[i].CAT_ID + "' data-shortname='" + response[i].STATUS + "'>" + response[i].DESCRIPTION + "</option>";
+
+                        }
+                    }
+                    $('select#CategoryList').append(result);
+                    $('select#CategoryListc').append(result);
+                    $('select#CategoryListp').append(result);
+                }
+            }
+        });
+    }
+    function PeripheralListS(segmentId) {
+        $.ajax({
+            url: '/AssetCategory/PeripheralList',
+            type: 'POST',
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({ _segmentId: segmentId }),
+            dataType: "json",
+            success: function (response) {
+                var result = '';
+                $('select#peripheral_list').html('');
+
+                if (response != "ERROR") {
+                    $('select#peripheral_list').html('');
+
+
+                    for (var i = 0; response.length > i; i++) {
+
+                        result += "<option id='" + response[i].ASSET_CODE + "' data-shortname='" + response[i].MST_TAG + "' value='" + response[i].ASSET_CODE + "' data-shortname='" + response[i].NAME + "'>" + response[i].DESCRIPTION + "</option>";
+
+                    }
+
+
+
+                }
+                $('select#peripheral_list').append(result);
+            }
+        });
+    }
+    function ComponentList(segmentId) {
+        $.ajax({
+            url: '/AssetCategory/ComponentList',
+            type: 'POST',
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({ _segmentId: segmentId }),
+            dataType: "json",
+            success: function (response) {
+                var result = '';
+                if (response != "ERROR") {
+                    $('select#component_list').html('');
+
+
+                    result += "<option value='0'>Component Name</option>";
+                    for (var i = 0; response.length > i; i++) {
+
+                        result += "<option id='" + response[i].ASSET_CODE + "' data-shortname='" + response[i].MST_TAG + "' value='" + response[i].ASSET_CODE + "' data-shortname='" + response[i].NAME + "'>" + response[i].DESCRIPTION + "</option>";
+
+                    }
+
+
+
+                }
+                $('select#component_list').append(result);
+            }
+        });
+    }
+    function SegmentList(catId) {
+        $.ajax({
+            url: '/AssetCategory/SegmentList',
+            type: 'POST',
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({ _catId: catId }),
+            dataType: "json",
+            success: function (response) {
+
+                if (response != "ERROR") {
+                    $('select#SegmentList').html('');
+                    $('select#SegmentListc').html('');
+                    $('select#SegmentListp').html('');
+                    var result1 = '';
+                    var result = '';
+                    result1 += "<option value='0'>Sub Category</option>";
+                    for (var i = 0; response.length > i; i++) {
+                        if (response.length > 0) {
+                            result1 += "<option  value='" + response[i].SEG_ID + "'data-shortname='" + response[i].CODE + "'>" + response[i].DESCRIPTION + "</option>";
+                            result += "<option  value='" + response[i].SEG_ID + "'data-shortname='" + response[i].CODE + "'>" + response[i].DESCRIPTION + "</option>";
+                        } else {
+                            result1 += "<option value='0'>Sub Category</option>";
+                            result += "<option value='0'>Sub Category</option>";
+                        }
+
+
+                    }
+                    $('select#SegmentList').append(result1);
+                    $('select#SegmentListc').append(result1);
+                    $('select#SegmentListp').append(result1);
+
+                    $('select#SegmentList').attr('disabled', false);
+                } else {
+                    $('select#SegmentList').attr('disabled', true);
+
+                }
+            }
+        });
+    }
+
+
+    function Article_Sl_Check(prifix) {
+        $.ajax({
+            type: "POST",
+            url: "/AssetCategory/ArticleSlCheck",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(
+                {
+                    _prifix: prifix
+                }
+            ),
+            success: function (response) {
+
+                if (response.length > 0) {
+
+                    $("#fullBarcode").html(response[0].Article_Serial);
+
+                    var vClass = $.trim($("#p_categoryList").find(':selected').data('shortname'));
+                    var vCategory = $.trim($("#CategoryList").find(':selected').data('shortname'));
+                    var vSegment = $.trim($("#SegmentList").find(':selected').data('shortname'));
+
+
+                    $(".segmentShortCode").html(prifix + $("#fullBarcode").html());
+                }
+
+            }
+        });
+    }
+
+
+
+
+    $("#submitAssetPeripheralData").click(function () {
+        if ($("#CategoryListc").val() == 0 || $("#SegmentListc").val() == 0 || $("#component_list").val() == 0 || $("#quantityp").val() == 0) {
+
+            Toast.fire({
+                icon: 'error',
+                title: 'CHECK THE EMPTY FIELDS'
+            });
+
+
+
+            return false;
+        } else {
+
+            var p_categoryList = $('#p_categoryListB ').val();
+            var TypeId = 2;
+            var peripheralList = $('#peripheral_list ').val();
+            var Quantity = $('#quantityp ').val();
+
+            //ajax passing data to controller
+            $.ajax({
+
+                type: "POST",
+                url: '/Department/Saveperipheral',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+
+                data: JSON.stringify({
+                    p_categoryList: p_categoryList,
+                    TypeId: TypeId,
+                    peripheralList: peripheralList,
+                    Quantity: Quantity
+
+                }),
+                success: function (response) {
+                    if (response != null) {
+
+
+                        Toast.fire({
+                            icon: 'success',
+                            title: "ITEM SUCCESSFULLY ADDED"
+                        });
+
+
+
+
+                        $("#quantityp").val("");
+                        $("#Description").val("");
+
+                        $('.addnew').show();
+                        getPeripheralData();
+                        getcomponentdatatable();
+
+                        $('#collapseSix').addClass('in');
+                        $('#collapseSix').attr('aria-expanded', 'true');
+                    }
+
+                },
+
+
+
+                error: function () {
+
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'error'
+                    });
+
+                }
+            });
+        }
+
+    });
+
+    $("#submitAssetComponentData").click(function () {
+        if ($("#CategoryListp").val() == 0 || $("#SegmentListp").val() == 0 || $("#component_list").val() == 0 || $("#quantityc").val() == 0) {
+
+            Toast.fire({
+                icon: 'error',
+                title: 'Check the Empty Fields'
+            });
+
+            return false;
+        } else {
+            var p_categoryList = $('#p_categoryListB ').val();
+            var TypeId = 3;
+            var peripheralList = $('#component_list ').val();
+            var Quantity = $('#quantityc ').val();
+
+
+
+            $.ajax({
+
+                type: "POST",
+                url: '/Department/Saveperipheral',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: JSON.stringify({
+                    p_categoryList: p_categoryList,
+                    TypeId: TypeId,
+                    peripheralList: peripheralList,
+                    Quantity: Quantity
+
+                }),
+                success: function (response) {
+
+
+                    if (response != null) {
+
+                        Toast.fire({
+                            icon: 'success',
+                            title: "ITEM SUCCESSFULLY ADDED"
+                        });
+
+                        $("#quantityc").val("");
+                        $("#Description").val("");
+
+                        $('.addnew').show();
+                        $('#collapseTwo').addClass('in');
+                        $('#collapseTwo').attr('aria-expanded', 'true');
+                        getcomponentdatatable();
+
+                    }
+
+                },
+                error: function () {
+
+                }
+            });
+        }
+
+    });
+
+
+    function manufacture_list_mod() {
+
+        $.ajax({
+            url: '/AssetCategory/ManufactureModelList',
+            type: 'POST',
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.length > 0) {
+                    console.log(response);
+                    $('select#manufacture_list_mod').html('');
+                    var result = '';
+                    result += "<option value='0'>Manufacure Name</option>";
+                    for (var i = 0; response.length > i; i++) {
+
+                        result += "<option id='" + response[i].MANF_ID + "'  data-STORAGE_ID='" + response[i].EXTERNAL_ID + "' title='" + response[i].DESCRIPTION + "' value='" + response[i].MANF_ID + "' data-shortname='" + response[i].STATUS + "'>" + response[i].DESCRIPTION + "</option>";
+
+                    }
+                }
+                $('select#manufacture_list_mod').append(result);
+
+
+            }
+        });
+    }
+
+
+    function SupplierList_mod() {
+
+        $.ajax({
+            url: '/AssetCategory/SupplierList',
+            type: 'POST',
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.length > 0) {
+                    console.log(response);
+                    $('select#SupplierList_mod').html('');
+                    var result = '';
+                    result += "<option value='0'>Supplier Name</option>";
+                    for (var i = 0; response.length > i; i++) {
+
+                        result += "<option id='" + response[i].SUPPLIER_ID + "'  data-STORAGE_ID='" + response[i].EXTERNAL_ID + "' title='" + response[i].NAME + "' value='" + response[i].SUPPLIER_ID + "' data-shortname='" + response[i].STATUS + "'>" + response[i].NAME + "</option>";
+
+                    }
+                }
+                $('select#SupplierList_mod').append(result);
+
+
+            }
+        });
+    }
+
+
+    function AssetList(segmentId, name) {
+        $.ajax({
+            url: '/AssetCategory/AssetList',
+            type: 'POST',
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({ _segmentId: segmentId, _name: name }),
+            dataType: "json",
+            success: function (response) {
+
+                if (response.length > 0) {
+                    $('select#asset_listB').html('');
+
+
+                    var result = '';
+
+                    for (var i = response.length - 1; response.length > i; i++) {
+
+                        result += "<option id='" + response[i].ASSET_CODE + "' data-shortname='" + response[i].MST_TAG + "' value='" + response[i].ASSET_CODE + "'>" + response[i].NAME + "</option>";
+
+                    }
+
+                    $('select#asset_listB').append(result);
+
+                }
+            }
+        });
+    }
+    function getPeripheralData() {
+
+
+        $.ajax({
+
+            type: "GET",
+            url: '/AssetCategory/PeripheralGridList',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+
+                if (response != null) {
+
+                    $('#peripheralList').empty();
+
+                    var result = '';
+                    if (response.data.length > 0) {
+
+                        result += '<div class="col-md-12">';
+                        result += '<div class="box-body table-responsive no-padding" id="peripheraldatatableload">';
+                        result += '<table id="peripheraldatatable" class="table table-bordered table-striped compact hover" cellspacing="0" width="100%">';
+                        result += '<thead>';
+                        result += '<tr>';
+                        result += '<th>Class</th>';
+                        result += '<th>Category</th>';
+                        result += '<th>Sub Category</th>';
+                        result += '<th>Peripheral</th>';
+                        result += '<th>Quantity</th>';
+                        result += '<th>Actions</th>';
+                        result += '</tr>';
+                        result += '</thead>';
+                        result += '<tbody>';
+
+                        for (var i = 0; i < response.data.length; i++) {
+
+
+                            result += '<tr id="' + response.data[i].ASSET_CODE + '">';
+                            result += '<td> ' + response.data[i].ASSET_CLASS_NAME + '</td>';
+                            result += '<td> ' + response.data[i].CATEGORY_NAME + '</td>';
+                            result += '<td > ' + response.data[i].SEGMENT_NAME + '</td>';
+                            result += '<td > ' + response.data[i].DESCRIPTION + '</td>';
+                            result += '<td> ' + response.data[i].QUANTITY + '</td>';
+                            var status = response.data[i].STATUS;
+                            if (status != 2) {
+                                result += '<td> <button type="button" class="btn btn-primary" onclick="deleteAssetPeripheral(' + response.data[i].ASSET_CODE + ')">Delete</button></td>';
+                            } else {
+                                result += '<td></td>';
+                            }
+
+                            result += '</tr>';
+
+                        }
+                        result += '</tbody>';
+                        result += '</table>';
+                        result += '</div>';
+                        result += '</div>';
+                    }
+                    $('#peripheralList').append(result);
+                }
+
+            },
+            error: function () {
+                alert("error");
+            }
+        });
+    }
+    function getcomponentdatatable() {
+
+        $.ajax({
+
+            type: "GET",
+            url: '/AssetCategory/AssetComponentGridList',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+
+                if (response != null) {
+
+                    $('#getComponentList').empty();
+
+                    var result = '';
+                    if (response.data.length > 0) {
+
+                        result += '<div class="col-md-12">';
+                        result += '<div class="box-body table-responsive no-padding" id="peripheraldatatableload">';
+                        result += '<table id="peripheraldatatable" class="table table-bordered table-striped compact hover" cellspacing="0" width="100%">';
+                        result += '<thead>';
+                        result += '<tr>';
+                        result += '<th>Class</th>';
+                        result += '<th>Category</th>';
+                        result += '<th>Sub Category</th>';
+                        result += '<th>Peripheral</th>';
+                        result += '<th>Quantity</th>';
+                        result += '<th>Actions</th>';
+                        result += '</tr>';
+                        result += '</thead>';
+                        result += '<tbody>';
+
+                        for (var i = 0; i < response.data.length; i++) {
+
+
+                            result += '<tr id="' + response.data[i].ASSET_CODE + '">';
+                            result += '<td> ' + response.data[i].ASSET_CLASS_NAME + '</td>';
+                            result += '<td> ' + response.data[i].CATEGORY_NAME + '</td>';
+                            result += '<td > ' + response.data[i].SEGMENT_NAME + '</td>';
+                            result += '<td > ' + response.data[i].DESCRIPTION + '</td>';
+                            result += '<td> ' + response.data[i].QUANTITY + '</td>';
+                            var status = response.data[i].STATUS;
+                            if (status == null) {
+                                result += '<td> <button type="button" class="btn btn-primary" onclick="deleteAssetPeripheral(' + response.data[i].ASSET_CODE + ')">Delete</button></td>';
+                            } else {
+                                result += '<td></td>';
+                            } result += '</tr>';
+
+                        }
+                        result += '</tbody>';
+                        result += '</table>';
+                        result += '</div>';
+                        result += '</div>';
+                    }
+                    $('#getComponentList').append(result);
+                }
+
+            },
+
+        });
+
+    }
+    function deleteAssetPeripheral(PeripheralCode) {
+        Swal.fire({
+            title: 'DO YOU WANT TO DELETE THIS?',
+            showDenyButton: true,
+            confirmButtonText: 'D E L E T E',
+            denyButtonText: 'N O',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: "/Department/Deleteperipheral",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({
+
+                        PeripheralCode: PeripheralCode
+
+                    }),
+                    success: function (result) {
+                        getPeripheralData();
+                        getcomponentdatatable();
+
+                        $('#collapseSix').addClass('in');
+                        $('#collapseSix').attr('aria-expanded', 'true');
+
+                        $("h2").css({ color: result[1] });
+                    },
+                    error: function () {
+
+                        Toast.fire({
+                            icon: 'error',
+                            title: 'error'
+                        });
+
+                    }
+                })
+            } else if (result.isDenied) {
+                Swal.fire('NO ITEM HAS BEEN DELETED', '', 'info')
+            }
+        });
+    }
+
+    $("#btnSubmit_insert").click(function () {
+
+        var asset_list = $('#asset_listB ').val();
+
+
+        $.ajax({
+
+            type: "POST",
+            url: '/AssetCategory/SaveAssetCMaster',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response != null) {
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'SUCCESSFULLY CREATE BILL OFF MATERIALS'
+                    });
+
+
+                    $("#masterTag").val("");
+                    $("#Name").val("");
+                    $("#p_categoryList").val("");
+                    $("#Description").val("");
+                    $("#Size").val("");
+                    $('.addnew').show();
+                    setTimeout(function () {
+                        location.reload();
+                    }, 1500);
+
+                }
+
+            },
+
+            data: JSON.stringify({
+                asset_list: asset_list
+
+            }),
+            error: function () {
+
+                Toast.fire({
+                    icon: 'error',
+                    title: 'error'
+                });
+
+            }
+        });
+
+
+    });
+</script>*@

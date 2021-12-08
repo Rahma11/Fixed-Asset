@@ -1,0 +1,517 @@
+﻿@using System.Data
+@using System.Collections
+@using FIXED_ASSET.DTO
+@using System.Data
+@using System.Collections
+ 
+@{
+    ViewBag.Title = "Operational Cost";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/Scripts/sweetalert.js"></script>
+<link href="~/Content/css/sweetalert2.css" />
+<link href="~/Content/css/sweetalert2.min.css" />
+
+<link href="~/Content/css/select2.css" rel="stylesheet" />
+<script src="~/Content/js/select2.full.min.js"></script>
+<link href="~/Content/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+<script src="~/Content/js/jquery.dataTables.min.js"></script>
+<script src="~/Content/js/dataTables.bootstrap.min.js"></script>
+
+<style type="text/css">
+
+    .swal2-popup {
+        font-size: 1.5rem !important;
+    }
+
+    div.addnew {
+        display: none
+    }
+
+    html {
+        overflow-y: scroll;
+    }
+</style>
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        @ViewBag.Title
+
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <!-- Default box -->
+    <div class="center-block col-md-6" style="float: none;">    </div>
+    <div class="box box-primary addnew">
+        <div class="box-header with-border">
+            <br />
+            <div class="box-tools pull-right">
+                <button class="btn btn-primary bg-blue-gradient hide-form">Hide</button>
+            </div>
+        </div>
+
+        <form role="form"></form>
+        <div class="box-body">
+            <div class="panel panel-primary col-md-6 center-block" style="float: none;">
+                <div class="panel-body">
+                    <fieldset>
+                        <legend>@ViewBag.Title</legend>
+                        <div class="form-group hidden">
+                            <label for="OperationCost">OPTIONAL COST ID</label>
+                            <input type="text" class="form-control" id="OperationCostId" placeholder="Optional Cost Id">
+                        </div>
+                        <div class="form-group">
+                            <label for="OperationCost">DESCRIPTION*</label>
+                            <input type="text" class="form-control" id="description" placeholder="Description">
+                        </div>
+                        <div class="form-group">
+                            <label for="Designation">OPTIONAL COST</label>
+                                <input type="number" class="form-control" id="OperationCost" placeholder="Optional Cost" autocomplete="off">
+                            </div>
+                        <div class="form-group">
+                            <label for="">STATUS</label>
+                            <select id="active_status" class="form-control" name="active_status">
+                                <option value="true">Active</option>
+                                <option value="false">InActive</option>
+                            </select>
+                        </div>
+
+                        <div class="text-right">
+                            <button type="submit" class="btn btn-primary" id="submitOperationCost" @*onclick="addcat();"*@>Submit</button>
+                            <button class="btn btn-sm btn-primary " id="updateOperationCost">
+                                <i class="ace-icon fa fa-check"></i> Update
+                            </button>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- /.box -->
+    <!-- Default box -->
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <br />
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool show-form text-info bg-blue-gradient"><i class="fa fa-plus"></i>Add New</button>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="box-body table-responsive no-padding">
+                <table id="datatable" class="table table-bordered table-striped compact hover" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            @*<th>SL</th>*@
+                            <th class="hidden"></th>
+                            <th>Description</th>
+                            @*<th class="hidden">Category Id</th>*@
+                                <th>Cost</th>
+                                @*<th> SHORT NAME</th>*@
+                            <th>STATUS</th>
+                            <th>ACTION</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <div class="box-footer">
+        </div>
+        <!-- /.box-footer-->
+        <!-- /.box-footer-->
+    </div>
+    <!-- /.box -->
+
+</section>
+<!-- /.content -->
+<script>
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    });
+
+
+    $(document).ready(function () {
+        $('.select2').select2();
+
+
+        $('.addnew').hide();
+        $('.show-form').click(function () {
+            $('.addnew').show();
+            $('.show-form').hide();
+            $('#updateOperationCost').hide();
+        });
+        $('.hide-form').click(function () {
+            $('.addnew').hide();
+            $('.show-form').show();
+        });
+
+
+
+        $('#address-tab').attr('class', 'disabled');
+
+        $('#address-tab').click(function (event) {
+            if ($(this).hasClass('disabled')) {
+                return false;
+            }
+
+        });
+        getData();
+
+    });
+
+    //test
+
+
+    function getData() {
+        $('#datatable').DataTable({
+            "searching": true,
+            "paging": true,
+            "ordering": true,
+            "info": true,
+            "language":
+            {
+                "processing": "<div class='overlay custom-loader-background'><i class='fa fa-cog fa-spin custom-loader-color'></i></div>"
+            },
+            "processing": true,
+            "ajax": {
+                "url": "/Product/GetOperationCostList",
+                "type": "GET",
+                "datatype": "json"
+            },
+            "columns": [
+                { "data": "DESCRIPTION", "autoWidth": true },
+                { "data": "COST_PER_H", "autoWidth": true },
+                { "data": "STATUS", "autoWidth": true },
+                {
+                    "data": "PROD_OPID", "width": "50px", "render": function (data) {
+                        debugger;
+                        return '<button type="button" class="btn btn-primary" onclick="editOperationCost(' + data + ')">Edit</button>';
+                       
+                    }
+                },
+                {
+                    "data": "PROD_OPID", "width": "50px", "render": function (data) {
+                        debugger;
+                       
+                        return '<button type="button" class="btn btn-primary" onclick="deleteOperationCost(' + data + ')">Delete</button>';
+                    }
+                }
+            ]
+        });
+    }
+
+    $("#submitOperationCost").click(function () {
+
+        var description = $('#description').val().toUpperCase();
+        var cost_Per_H = $('#OperationCost').val();
+        var activeStatus = $('#active_status').val();
+
+        if (description == '') {
+            Toast.fire({
+                icon: 'error',
+                title: 'OperationCost name field is empty'
+            });
+            return false;
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                url: '/Product/SaveOperationCost',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response != null) {
+
+                        if (response === 'Success') {
+                            Toast.fire({
+                                icon: 'success',
+                                title: response
+                            });
+
+                            $("#description").val("");
+                            $("#OperationCost").val("");
+                            $('.addnew').show();
+                            setTimeout(function () {
+                                location.reload();
+                            }, 1500);
+                        } else {
+                            Toast.fire({
+                                icon: 'error',
+                                title: response
+                            });
+                            $('.addnew').show();
+                        }
+                    }
+                },
+                data: JSON.stringify({
+                    description: description,
+                    cost_Per_H: cost_Per_H,
+                    activeStatus: activeStatus
+                }),
+                error: function () {
+
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'error'
+                    });
+                }
+            });
+        }
+
+    });
+
+
+    function editOperationCost(OperationCostId) {
+        //$("#classificationId").prop("disabled", true);
+        //$("#classificationCode").prop("disabled", true);
+        $('.addnew').show();
+        $('#updateOperationCost').show();
+        $('#submitOperationCost').hide();
+
+        $.ajax({
+            type: "POST",
+            url: "/Product/EditOperationCost",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify({
+                //  obj: asd
+                OperationCostId: OperationCostId
+
+            }),
+            success: function (response) {
+
+                console.log(response);
+
+                //var OperationCostName = $('#OperationCostName').val().toUpperCase();
+                //var activeStatus = $('#active_status').val();
+                $("#OperationCostId").val(OperationCostId);
+                $("#description").val(response.data.DESCRIPTION);
+                $("#OperationCost").val(response.data.COST_PER_H);
+                //$("#classificationCode").val(response.data.CODE);
+
+                if (response.data.STATUS == 'Active') {
+                    $("#active_status").val('true');
+                } else {
+                    $("#active_status").val('false');
+                }
+
+                //$("#btnShowReport").hide();
+                //$("#btnUpdate").show();
+
+
+            }
+        })
+
+
+
+    }
+    function deleteOperationCost(OperationCostId) {
+        //$("#classificationId").prop("disabled", true);
+        //$("#classificationCode").prop("disabled", true);
+        //$('.addnew').show();
+        //$('#updateOperationCost').show();
+        //$('#submitOperationCost').hide();
+
+        $.ajax({
+            type: "POST",
+            url: "/Product/DeleteOperationCost",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify({
+                //  obj: asd
+                OperationCostId: OperationCostId
+
+            }),
+            success: function (response) {
+
+                console.log(response);
+
+                //var OperationCostName = $('#OperationCostName').val().toUpperCase();
+                //var activeStatus = $('#active_status').val();
+                //$("#OperationCostId").val(OperationCostId);
+                //$("#description").val(response.data.DESCRIPTION);
+                //$("#OperationCost").val(response.data.COST_PER_H);
+                //$("#classificationCode").val(response.data.CODE);
+
+                //if (response.data.STATUS == 'Active') {
+                //    $("#active_status").val('true');
+                //} else {
+                //    $("#active_status").val('false');
+                //}
+
+                //$("#btnShowReport").hide();
+                //$("#btnUpdate").show();
+                location.reload();
+
+            }
+        })
+
+
+    }
+
+    $("#updateOperationCost").click(function UpdateData() {
+        debugger
+        var OperationCostId = $("#OperationCostId").val();
+        var description= $('#description ').val().toUpperCase();
+        var OperationCost = $('#OperationCost ').val().toUpperCase();
+        var activeStatus = $('#active_status').val();
+
+
+        /* if (classificationCode == '') {
+             alert('Classification Code  field is empty !!');
+             return false;
+         }
+         ////else*/
+        //if (classificationName == '') {
+        //    //alert('Classification Name  field is empty!!');
+
+
+
+        //    Toast.fire({
+        //        icon: 'error',
+        //        title: 'Classification Name  field is empty!!'
+        //    });
+        //    return false;
+        //}
+        //else {
+        // ajax passing data to controller
+        $.ajax({
+            url: '/Product/UpdateOperationCost',
+            type: 'POST',
+            dataType: "json",
+            traditional: true,
+            success: function (response) {
+                if (response != null) {
+
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'success'
+                    });
+
+                    //toastr.success(response, 'Classification', {
+                    //    "closeButton": false,
+                    //    "debug": false,
+                    //    "newestOnTop": false,
+                    //    "progressBar": true,
+                    //    "positionClass": "toast-top-right",
+                    //    "preventDuplicates": false,
+                    //    "onclick": null,
+                    //    "showDuration": "300",
+                    //    "hideDuration": "1000",
+                    //    "timeOut": "5000",
+                    //    "extendedTimeOut": "1000",
+                    //    "showEasing": "swing",
+                    //    "hideEasing": "linear",
+                    //    "showMethod": "fadeIn",
+                    //    "hideMethod": "fadeOut"
+                    //});
+                    //   $("#classificationId").val("");
+                    //$("#classificationId").val("");
+                    //$("#classificationCode").val("");
+                    //$("#classificationName").val("");
+                    $('.addnew').show();
+                    setTimeout(function () {
+                        $('.show-form').hide();
+                        location.reload();
+                    }, 1500);
+
+                }
+            },
+            data: {
+
+                OperationCostId: OperationCostId,
+                description: description,
+                OperationCost: OperationCost,
+                activeStatus: activeStatus
+
+
+
+            },
+            error: function () {
+
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Something went wrong'
+                });
+
+            }
+        });
+        //}
+
+    });
+
+
+
+    //   $("#classificationCode").change(function () {
+    //    var _shortcode = $("#classificationCode").val().toUpperCase();
+    //    $("#classificationCode").val(_shortcode);
+    //    if ($.trim(_shortcode).length < 1 || $.trim(_shortcode).length > 3) {
+    //        Toast.fire({
+    //            icon: 'warning',
+    //            title: 'Short Code length must be between 1 to 3'
+    //        });
+    //        $("#classificationCode").val('');
+    //    } else {
+    //        $.ajax({
+
+    //            type: "POST",
+    //            url: '/AssetCategory/CheckShortCode',
+    //            contentType: "application/json; charset=utf-8",
+    //            dataType: "json",
+
+    //            success: function (response) {
+    //                if (response != "ERROR") {
+    //                    Toast.fire({
+    //                        icon: 'error',
+    //                        title: 'Short Code Already exists for ' + response[0].CLASS_NAME
+    //                    });
+
+
+    //                    $("#classificationCode").val('');
+
+    //                } else {
+    //                    Toast.fire({
+    //                        icon: 'success',
+    //                        title: 'Short Code is available'
+    //                    });
+
+
+    //                }
+
+    //            },
+    //            data: JSON.stringify({
+    //                shorcode: _shortcode,
+    //                st: 1
+
+    //            }),
+    //            error: function () {
+    //                Toast.fire({
+    //                    icon: 'error',
+    //                    title: 'Something went wrong'
+    //                });
+    //            }
+    //        });
+    //    }
+
+    //});
+
+
+</script>
+
